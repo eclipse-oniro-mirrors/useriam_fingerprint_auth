@@ -43,7 +43,7 @@
 
 [useriam_pin_auth](https://gitee.com/openharmony/useriam_pin_auth)
 
-[useriam_faceauth](https://gitee.com/openharmony/useriam_faceauth)
+[useriam_face_auth](https://gitee.com/openharmony/useriam_face_auth)
 
 [drivers_interface](https://gitee.com/openharmony/drivers_interface)
 
