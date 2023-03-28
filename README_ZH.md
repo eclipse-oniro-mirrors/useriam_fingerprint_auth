@@ -9,7 +9,7 @@
 
 <img src="figures/fingerprintauth_architecture_ZH.png" alt="指纹认证架构图" />
 
-指纹认证是作为执行器注册到统一用户框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)，再由统一用户认证框架进行调度。
+指纹认证是作为执行器注册到统一用户框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)，再由统一用户认证框架在指纹的录入，删除认证和识别时进行调度。
 
 指纹数据是用户的重要生物识别信息，在指纹认证的处理过程中，我们对用户输入的指纹数据实施了如下安全保护措施：
 
@@ -31,7 +31,7 @@
 
 ## 使用说明
 
-南向厂商适配指纹认证功能时，需实现IDL文件[`//drivers/interface/fingerprint_auth`](https://gitee.com/openharmony/drivers_interface/tree/master/fingerprint_auth) 中定义的接口，[`//drivers/peripheral/fingerprint_auth`](https://gitee.com/openharmony/drivers_interface/tree/master/fingerprint_auth)提供了接口的桩实现，供开发过程参考。指纹数据的提取、比对、存储和录入等过程应在尽可能安全的环境中实现，保证用户指纹数据的的安全保护达到系统内可以提供的最高安全级别（可信执行环境/安全芯片）。指纹认证会随useriam子系统编译。
+南向厂商适配指纹认证功能时，需实现IDL文件[`//drivers/interface/fingerprint_auth`](https://gitee.com/openharmony/drivers_interface/tree/master/fingerprint_auth) 中定义的接口，[`//drivers/peripheral/fingerprint_auth`](https://gitee.com/openharmony/drivers_peripheral/tree/master/fingerprint_auth)提供了接口的桩实现，供开发过程参考。指纹数据的提取、比对、存储和录入等过程应在尽可能安全的环境中实现，保证用户指纹数据的的安全保护达到系统内可以提供的最高安全级别（可信执行环境/安全芯片）。指纹认证会随useriam子系统编译。
 
 ## 相关仓
 
