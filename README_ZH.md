@@ -9,7 +9,7 @@
 
 <img src="figures/fingerprintauth_architecture_ZH.png" alt="指纹认证架构图" />
 
-指纹认证是作为执行器注册到统一用户框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)，再由统一用户认证框架在指纹的录入，删除，认证和识别时进行调度。
+统一认证框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)通过执行器管理SA进行执行器的管理和调度。指纹认证SA是作为执行器注册到统一用户框架，再由统一用户认证框架在指纹的录入，删除，认证和识别时进行调度。
 
 指纹数据是用户的重要生物识别信息，在指纹认证的处理过程中，我们对用户输入的指纹数据实施了如下安全保护措施：
 
