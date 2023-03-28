@@ -31,7 +31,7 @@
 
 ## 使用说明
 
-南向厂商适配指纹认证功能时，需实现IDL文件[`//drivers/interface/fingerprint_auth`](https://gitee.com/openharmony/drivers_interface/tree/master/fingerprint_auth) 中定义的接口，[`//drivers/peripheral/fingerprint_auth`](https://gitee.com/openharmony/drivers_peripheral/tree/master/fingerprint_auth)提供了接口的桩实现，桩实现会随hdf(Hardware Driver Foundation)子系统编译，供开发过程参考。指纹数据的提取、比对、存储和录入等过程应在尽可能安全的环境中实现，保证用户指纹数据的的安全保护达到系统内可以提供的最高安全级别（可信执行环境/安全芯片）。
+南向厂商适配指纹认证功能时，需实现IDL文件[`//drivers/interface/fingerprint_auth`](https://gitee.com/openharmony/drivers_interface/tree/master/fingerprint_auth)中定义的接口，[`//drivers/peripheral/fingerprint_auth`](https://gitee.com/openharmony/drivers_peripheral/tree/master/fingerprint_auth)提供了接口的桩实现，桩实现会随hdf(Hardware Driver Foundation)子系统编译，供开发过程参考。指纹数据的提取、比对、存储和录入等过程应在尽可能安全的环境中实现，保证用户指纹数据的的安全保护达到系统内可以提供的最高安全级别（可信执行环境/安全芯片）。
 
 ## 相关仓
 
