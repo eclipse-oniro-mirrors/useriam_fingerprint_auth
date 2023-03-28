@@ -3,13 +3,13 @@
 
 **指纹认证** （fingerprintauth）支持用户指纹的录入，删除和认证功能。
 
-指纹认证是OpenHarmony支持的一种生物认证执行器，按照统一用户认证框架定义的资源注册接口，将指纹认证相关资源信息注册到统一用户认证框架，并根据统一用户认证框架的调度，调用指纹认证HDI，完成指纹的录入，认证，删除等功能。
+指纹认证是OpenHarmony支持的一种生物认证执行器，按照统一用户认证框架定义的资源注册接口，将指纹认证相关资源信息注册到统一用户认证框架，并根据统一用户认证框架的调度，调用指纹认证HDI，完成指纹的录入，删除，认证和识别等功能。
 
 **图1** 指纹认证架构图
 
 <img src="figures/fingerprintauth_architecture_ZH.png" alt="指纹认证架构图" />
 
-指纹认证是作为执行器注册到统一用户框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)，再由统一用户认证框架在指纹的录入，删除认证和识别时进行调度。
+指纹认证是作为执行器注册到统一用户框架[useriam_user_auth_framework](https://gitee.com/openharmony/useriam_user_auth_framework)，再由统一用户认证框架在指纹的录入，删除，认证和识别时进行调度。
 
 指纹数据是用户的重要生物识别信息，在指纹认证的处理过程中，我们对用户输入的指纹数据实施了如下安全保护措施：
 
