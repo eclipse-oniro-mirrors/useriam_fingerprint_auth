@@ -67,6 +67,7 @@ void FingerprintAuthService::OnStart()
 void FingerprintAuthService::OnStop()
 {
     IAM_LOGE("service is persistent, OnStop is not implemented");
+    return;
 }
 
 void FingerprintAuthService::StartDriverManager()
