@@ -12,7 +12,6 @@
 # limitations under the License.
 
 import("//build/ohos.gni")
-import("//foundation/ability/ability_runtime/ability_runtime.gni")
 
 ohos_shared_library("fingerprintauthservice") {
   sources = [
@@ -24,11 +23,11 @@ ohos_shared_library("fingerprintauthservice") {
   ]
   include_dirs = [
     "inc",
-    "//base/useriam/fingerprint_auth/common/inc",
-    "//base/useriam/user_auth_framework/common/logs",
-    "//base/useriam/user_auth_framework/common/utils",
+    "../common/inc",
+    "../common/logs",
+    "../common/utils",
   ]
-  
+
   external_deps = [
     "c_utils:utils",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.0",
