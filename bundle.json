@@ -1,6 +1,6 @@
 {
     "name": "@openharmony/fingerprint_auth",
-    "version": "3.2",
+    "version": "4.0",
     "description": "fingerprint authentication capability",
     "homePage": "https://gitee.com/openharmony",
     "author": {},
@@ -22,13 +22,14 @@
       "ram": "16000KB",
       "deps": {
         "components": [
-          "aafwk_standard",
-          "fingerprintauth_device_driver_interface:libfingerprint_auth_proxy_1.0",
-          "hiviewdfx_hilog_native:libhilog",
-          "ipc:ipc_core",
-          "safwk:system_ability_fwk",
-          "samgr:samgr_proxy",
-          "c_utils:utils"
+          "fingerprintauth_device_driver_interface",
+          "hiviewdfx_hilog_native",
+          "ipc",
+          "safwk",
+          "samgr",
+          "c_utils",
+          "user_auth_framework",
+          "hilog_native"
         ]
       },
       "build": {
