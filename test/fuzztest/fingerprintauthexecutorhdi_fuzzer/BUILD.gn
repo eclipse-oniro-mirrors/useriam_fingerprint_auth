@@ -16,6 +16,7 @@ import("//build/test.gni")
 
 ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
   module_out_path = "useriam/fingerprint_auth"
+  fuzz_config_file = "../fingerprintauthexecutorhdi_fuzzer"
 
   cflags = [
     "-g",
