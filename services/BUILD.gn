@@ -37,6 +37,11 @@ ohos_shared_library("fingerprintauthservice") {
     "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
   ]
+
+  if (use_musl) {
+    version_script = "fingerprint_auth_service_map"
+  }
+
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 
   subsystem_name = "useriam"

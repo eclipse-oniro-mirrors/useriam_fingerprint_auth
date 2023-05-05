@@ -32,11 +32,14 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
   ]
 
   sources = [
+    "../../../services/src/fingerprint_auth_driver_hdi.cpp",
+    "../../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
+    "../../../services/src/fingerprint_auth_executor_hdi.cpp",
+    "../../../services/src/fingerprint_auth_interface_adapter.cpp",
+    "../../../services/src/fingerprint_auth_service.cpp",
     "../iamfuzz/iam_fuzz_test.cpp",
     "fingerprint_auth_executor_hdi_fuzzer.cpp",
   ]
-
-  deps = [ "../../../services:fingerprintauthservice" ]
 
   external_deps = [
     "c_utils:utils",
@@ -44,6 +47,8 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
     "hilog_native:libhilog",
     "hiviewdfx_hilog_native:libhilog",
     "ipc:ipc_single",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
   ]
 
