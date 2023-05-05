@@ -22,7 +22,7 @@
       "ram": "16000KB",
       "deps": {
         "components": [
-          "fingerprintauth_device_driver_interface",
+          "drivers_interface_fingerprint_auth",
           "hiviewdfx_hilog_native",
           "ipc",
           "safwk",
