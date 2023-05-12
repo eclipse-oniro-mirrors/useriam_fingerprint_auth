@@ -15,20 +15,27 @@
 
 #include "fingerprint_auth_executor_callback_hdi.h"
 
+#include <cstdint>
+#include <functional>
 #include <map>
+#include <memory>
+#include <utility>
+#include <vector>
+
+#include "hdf_base.h"
 
 #include "iam_check.h"
+#include "iam_executor_iexecute_callback.h"
 #include "iam_logger.h"
+
 #include "fingerprint_auth_defines.h"
-#include "v1_0/fingerprint_auth_types.h"
+#include "sa_command_manager.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-namespace UserAuth = OHOS::UserIam::UserAuth;
-using IamResultCode = OHOS::UserIam::UserAuth::ResultCode;
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
     std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback)
     : frameworkCallback_(frameworkCallback)
@@ -38,7 +45,7 @@ FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
 int32_t FingerprintAuthExecutorCallbackHdi::OnResult(int32_t result, const std::vector<uint8_t> &extraInfo)
 {
     IAM_LOGI("OnResult %{public}d", result);
-    IamResultCode retCode = ConvertResultCode(result);
+    UserAuth::ResultCode retCode = ConvertResultCode(result);
     IF_FALSE_LOGE_AND_RETURN_VAL(frameworkCallback_ != nullptr, HDF_FAILURE);
     frameworkCallback_->OnResult(retCode, extraInfo);
     return HDF_SUCCESS;
@@ -52,32 +59,32 @@ int32_t FingerprintAuthExecutorCallbackHdi::OnTip(int32_t tip, const std::vector
     return HDF_SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorCallbackHdi::ConvertResultCode(const int32_t in)
+UserAuth::ResultCode FingerprintAuthExecutorCallbackHdi::ConvertResultCode(const int32_t in)
 {
     ResultCode hdiIn = static_cast<ResultCode>(in);
     if (hdiIn > ResultCode::VENDOR_RESULT_CODE_BEGIN) {
         IAM_LOGI("vendor hdi result code %{public}d, no covert", hdiIn);
-        return static_cast<IamResultCode>(in);
+        return static_cast<UserAuth::ResultCode>(in);
     }
 
-    static const std::map<ResultCode, IamResultCode> data = {
-        {ResultCode::SUCCESS, IamResultCode::SUCCESS},
-        {ResultCode::FAIL, IamResultCode::FAIL},
-        {ResultCode::GENERAL_ERROR, IamResultCode::GENERAL_ERROR},
-        {ResultCode::CANCELED, IamResultCode::CANCELED},
-        {ResultCode::TIMEOUT, IamResultCode::TIMEOUT},
-        {ResultCode::BUSY, IamResultCode::BUSY},
-        {ResultCode::INVALID_PARAMETERS, IamResultCode::INVALID_PARAMETERS},
-        {ResultCode::LOCKED, IamResultCode::LOCKED},
-        {ResultCode::NOT_ENROLLED, IamResultCode::NOT_ENROLLED},
-        // should be IamResultCode::OPERATION_NOT_SUPPORT
-        {ResultCode::OPERATION_NOT_SUPPORT, IamResultCode::FAIL},
+    static const std::map<ResultCode, UserAuth::ResultCode> data = {
+        { ResultCode::SUCCESS, UserAuth::ResultCode::SUCCESS },
+        { ResultCode::FAIL, UserAuth::ResultCode::FAIL },
+        { ResultCode::GENERAL_ERROR, UserAuth::ResultCode::GENERAL_ERROR },
+        { ResultCode::CANCELED, UserAuth::ResultCode::CANCELED },
+        { ResultCode::TIMEOUT, UserAuth::ResultCode::TIMEOUT },
+        { ResultCode::BUSY, UserAuth::ResultCode::BUSY },
+        { ResultCode::INVALID_PARAMETERS, UserAuth::ResultCode::INVALID_PARAMETERS },
+        { ResultCode::LOCKED, UserAuth::ResultCode::LOCKED },
+        { ResultCode::NOT_ENROLLED, UserAuth::ResultCode::NOT_ENROLLED },
+        // should be UserAuth::ResultCode::OPERATION_NOT_SUPPORT
+        { ResultCode::OPERATION_NOT_SUPPORT, UserAuth::ResultCode::FAIL },
     };
 
-    IamResultCode out;
+    UserAuth::ResultCode out;
     auto iter = data.find(hdiIn);
     if (iter == data.end()) {
-        out = IamResultCode::GENERAL_ERROR;
+        out = UserAuth::ResultCode::GENERAL_ERROR;
         IAM_LOGE("convert hdi undefined result code %{public}d to framework result code %{public}d", in, out);
         return out;
     }

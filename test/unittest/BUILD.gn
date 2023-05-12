@@ -17,38 +17,50 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
   module_out_path = "useriam/fingerprint_auth"
 
   sources = [
-    "../../services/src/fingerprint_auth_driver_hdi.cpp",
-    "../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
-    "../../services/src/fingerprint_auth_executor_hdi.cpp",
-    "../../services/src/fingerprint_auth_interface_adapter.cpp",
-    "../../services/src/fingerprint_auth_service.cpp",
     "fingerprint_auth_driver_hdi_unit_test.cpp",
     "fingerprint_auth_executor_callback_hdi_unit_test.cpp",
     "fingerprint_auth_executor_hdi_unit_test.cpp",
   ]
 
-  include_dirs = [
-    "mock",
-    "../../common/logs",
-    "../../common/utils",
-    "../../common/inc",
-    "../../services/inc",
-  ]
+  include_dirs = [ "mock" ]
 
   deps = [
+    "../../services:fingerprintauthservice_source_set",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
-    "c_utils:utils",
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.0",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
     "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_single",
-    "safwk:system_ability_fwk",
-    "samgr:samgr_proxy",
-    "user_auth_framework:userauth_client",
     "user_auth_framework:userauth_executors",
+    "window_manager:libdm",
+  ]
+
+  remove_configs = [ "//build/config/compiler:no_exceptions" ]
+
+  subsystem_name = "useriam"
+  part_name = "fingerprint_auth"
+}
+
+ohos_unittest("FingerprintSensorIlluminationTest") {
+  module_out_path = "useriam/fingerprint_auth"
+
+  sources = [ "fingerprint_auth_sensor_illumination_test.cpp" ]
+
+  deps = [
+    "../../services:fingerprintauthservice_source_set",
+    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
+    "//third_party/googletest:gtest_main",
+  ]
+
+  external_deps = [
+    "display_manager:displaymgr",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
+    "hiviewdfx_hilog_native:libhilog",
+    "user_auth_framework:userauth_executors",
+    "window_manager:libdm",
   ]
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
@@ -60,5 +72,8 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
 group("fingerprint_unittest") {
   testonly = true
 
-  deps = [ ":FingerprintAuthServiceUnitTest" ]
+  deps = [
+    ":FingerprintAuthServiceUnitTest",
+    ":FingerprintSensorIlluminationTest",
+  ]
 }
