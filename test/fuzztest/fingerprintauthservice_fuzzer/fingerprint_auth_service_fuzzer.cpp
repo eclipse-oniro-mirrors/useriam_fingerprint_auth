@@ -39,14 +39,18 @@ auto g_service = FingerprintAuthService::GetInstance();
 void FuzzOnStart(Parcel &parcel)
 {
     IAM_LOGI("begin");
-    g_service->OnStart();
+    if (g_service != nullptr) {
+        g_service->OnStart();
+    }
     IAM_LOGI("end");
 }
 
 void FuzzOnStop(Parcel &parcel)
 {
     IAM_LOGI("begin");
-    g_service->OnStop();
+    if (g_service != nullptr) {
+        g_service->OnStop();
+    }
     IAM_LOGI("end");
 }
 

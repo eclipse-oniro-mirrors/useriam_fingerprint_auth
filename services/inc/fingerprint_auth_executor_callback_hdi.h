@@ -21,20 +21,19 @@
 #include "hdf_base.h"
 #include "nocopyable.h"
 
+#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_hdi.h"
 #include "iam_executor_iexecute_callback.h"
-#include "v1_0/iexecutor_callback.h"
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-namespace FingerprintHdi = OHOS::HDI::FingerprintAuth::V1_0;
 namespace UserAuth = OHOS::UserIam::UserAuth;
-class FingerprintAuthExecutorCallbackHdi : public FingerprintHdi::IExecutorCallback, public NoCopyable {
+class FingerprintAuthExecutorCallbackHdi : public IExecutorCallback, public NoCopyable {
 public:
     explicit FingerprintAuthExecutorCallbackHdi(std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback);
     ~FingerprintAuthExecutorCallbackHdi() override = default;
 
-    // FingerprintHdi::IExecutorCallback
     int32_t OnResult(int32_t result, const std::vector<uint8_t> &extraInfo) override;
     int32_t OnTip(int32_t tip, const std::vector<uint8_t> &extraInfo) override;
 

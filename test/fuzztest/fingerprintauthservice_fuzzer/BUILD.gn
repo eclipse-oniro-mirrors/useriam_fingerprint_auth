@@ -25,34 +25,16 @@ ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
     "-fno-omit-frame-pointer",
   ]
 
-  include_dirs = [
-    "../../../common/inc",
-    "../../../common/logs",
-    "../../../common/utils",
-    "../../../services/inc",
-    "../iamfuzz",
-  ]
+  include_dirs = [ "../iamfuzz" ]
 
   sources = [
-    "../../../services/src/fingerprint_auth_driver_hdi.cpp",
-    "../../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
-    "../../../services/src/fingerprint_auth_executor_hdi.cpp",
-    "../../../services/src/fingerprint_auth_interface_adapter.cpp",
-    "../../../services/src/fingerprint_auth_service.cpp",
     "../iamfuzz/iam_fuzz_test.cpp",
     "fingerprint_auth_service_fuzzer.cpp",
   ]
 
-  external_deps = [
-    "c_utils:utils",
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.0",
-    "hilog_native:libhilog",
-    "hiviewdfx_hilog_native:libhilog",
-    "ipc:ipc_single",
-    "safwk:system_ability_fwk",
-    "samgr:samgr_proxy",
-    "user_auth_framework:userauth_executors",
-  ]
+  deps = [ "../../../services:fingerprintauthservice_source_set" ]
+
+  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 

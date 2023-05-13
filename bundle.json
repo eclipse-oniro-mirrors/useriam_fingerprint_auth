@@ -22,14 +22,20 @@
       "ram": "1306KB",
       "deps": {
         "components": [
+          "ability_base",
+          "c_utils",
+          "common_event_service",
+          "display_manager",
           "drivers_interface_fingerprint_auth",
+          "graphic_standard",
+          "hilog_native",
           "hiviewdfx_hilog_native",
           "ipc",
+          "power_manager",
           "safwk",
           "samgr",
-          "c_utils",
           "user_auth_framework",
-          "hilog_native"
+          "window_manager"
         ]
       },
       "build": {

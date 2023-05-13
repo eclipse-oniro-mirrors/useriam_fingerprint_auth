@@ -15,9 +15,20 @@
 
 #include "fingerprint_auth_service.h"
 
+#include <cstdint>
+#include <functional>
 #include <map>
+#include <memory>
+#include <mutex>
+#include <string>
+#include <vector>
 
 #include "iam_executor_idriver_manager.h"
+#include "ipc_skeleton.h"
+#include "iremote_object.h"
+#include "iservice_registry.h"
+#include "refbase.h"
+#include "system_ability.h"
 #include "system_ability_definition.h"
 
 #include "iam_check.h"
@@ -27,6 +38,8 @@
 
 #include "fingerprint_auth_defines.h"
 #include "fingerprint_auth_driver_hdi.h"
+#include "fingerprint_auth_interface_adapter.h"
+#include "sensor_illumination_manager.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
 
@@ -34,8 +47,22 @@ namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
-const bool REGISTER_RESULT =
-    SystemAbility::MakeAndRegisterAbility(FingerprintAuthService::GetInstance().get());
+using namespace OHOS::UserIam;
+namespace {
+const bool REGISTER_RESULT = SystemAbility::MakeAndRegisterAbility(FingerprintAuthService::GetInstance().get());
+const uint16_t FINGERPRINT_AUTH_DEFAULT_HDI_ID = 1;
+const auto FINGERPRINT_AUTH_DEFAULT_HDI_ADAPTER = Common::MakeShared<FingerprintAuthInterfaceAdapter>();
+auto FINGERPRINT_AUTH_DEFAULT_HDI = Common::MakeShared<FingerprintAuthDriverHdi>(FINGERPRINT_AUTH_DEFAULT_HDI_ADAPTER);
+// serviceName and HdiConfig.id must be globally unique
+const std::map<std::string, UserAuth::HdiConfig> HDI_NAME_2_CONFIG = {
+    { "fingerprint_auth_interface_service", { FINGERPRINT_AUTH_DEFAULT_HDI_ID, FINGERPRINT_AUTH_DEFAULT_HDI } },
+};
+const std::vector<std::shared_ptr<FingerprintAuthDriverHdi>> FINGERPRINT_AUTH_DRIVER_HDIS = {
+    FINGERPRINT_AUTH_DEFAULT_HDI
+};
+// setup brightness manager
+const auto SensorIlluminationManager = SensorIlluminationManager::GetInstance();
+} // namespace
 std::mutex FingerprintAuthService::mutex_;
 std::shared_ptr<FingerprintAuthService> FingerprintAuthService::instance_ = nullptr;
 
@@ -46,9 +73,9 @@ FingerprintAuthService::FingerprintAuthService() : SystemAbility(SUBSYS_USERIAM_
 std::shared_ptr<FingerprintAuthService> FingerprintAuthService::GetInstance()
 {
     if (instance_ == nullptr) {
-        std::lock_guard<std::mutex> gurard(mutex_);
+        std::lock_guard<std::mutex> guard(mutex_);
         if (instance_ == nullptr) {
-            instance_ = UserIam::Common::MakeShared<FingerprintAuthService>();
+            instance_ = Common::MakeShared<FingerprintAuthService>();
             if (instance_ == nullptr) {
                 IAM_LOGE("make share failed");
             }
@@ -73,17 +100,8 @@ void FingerprintAuthService::OnStop()
 void FingerprintAuthService::StartDriverManager()
 {
     IAM_LOGI("start");
-    auto adapter = UserIam::Common::MakeShared<FingerprintAuthInterfaceAdapter>();
-    IF_FALSE_LOGE_AND_RETURN(adapter != nullptr);
-    auto fingerprintAuthDefaultHdi = UserIam::Common::MakeShared<FingerprintAuthDriverHdi>(adapter);
-    IF_FALSE_LOGE_AND_RETURN(fingerprintAuthDefaultHdi != nullptr);
-    const uint16_t fingerprintAuthDefaultHdiId = 2;
-    // serviceName and HdiConfig.id must be globally unique
-    const std::map<std::string, UserAuth::HdiConfig> hdiName2Config = {
-        {"fingerprint_auth_interface_service", {fingerprintAuthDefaultHdiId, fingerprintAuthDefaultHdi}},
-    };
-    int32_t ret = UserAuth::IDriverManager::Start(hdiName2Config);
-    if (ret != SUCCESS) {
+    int32_t ret = UserAuth::IDriverManager::Start(HDI_NAME_2_CONFIG);
+    if (ret != UserAuth::ResultCode::SUCCESS) {
         IAM_LOGE("start driver manager failed");
     }
 }

@@ -15,6 +15,10 @@
 
 #include "fingerprint_auth_interface_adapter.h"
 
+#include "refbase.h"
+
+#include "fingerprint_auth_hdi.h"
+
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
