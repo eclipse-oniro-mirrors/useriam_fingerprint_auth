@@ -15,25 +15,34 @@
 
 #include "fingerprint_auth_driver_hdi.h"
 
-#include <cstdint>
+#include <memory>
+#include <vector>
+
+#include "hdf_base.h"
+#include "refbase.h"
 
 #include "iam_check.h"
 #include "iam_logger.h"
 #include "iam_ptr.h"
-#include "iam_executor_iauth_executor_hdi.h"
 
 #include "fingerprint_auth_defines.h"
 #include "fingerprint_auth_executor_hdi.h"
-#include "v1_0/ifingerprint_auth_interface.h"
+#include "fingerprint_auth_hdi.h"
+#include "fingerprint_auth_interface_adapter.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+using namespace OHOS::HDI::FingerprintAuth::V1_0;
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
+using namespace OHOS::UserIam;
+
+std::mutex FingerprintAuthDriverHdi::mutex_;
+
 FingerprintAuthDriverHdi::FingerprintAuthDriverHdi(
-    std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter)
+    const std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter)
     : fingerprintAuthInterfaceAdapter_(fingerprintAuthInterfaceAdapter)
 {
 }
@@ -48,23 +57,42 @@ void FingerprintAuthDriverHdi::GetExecutorList(std::vector<std::shared_ptr<UserA
     }
 
     std::vector<sptr<IExecutor>> iExecutorList;
-    auto ret = fingerprintIf->GetExecutorList(iExecutorList);
+    auto ret = fingerprintIf->GetExecutorListV1_1(iExecutorList);
     if (ret != HDF_SUCCESS) {
         IAM_LOGE("GetExecutorList fail");
         return;
     }
+
+    std::lock_guard<std::mutex> guard(mutex_);
+    fingerprintAuthExecutorList_.clear();
     for (const auto &iExecutor : iExecutorList) {
         if (iExecutor == nullptr) {
             IAM_LOGE("iExecutor is nullptr");
             continue;
         }
-        auto executor = UserIam::Common::MakeShared<FingerprintAuthExecutorHdi>(iExecutor);
+        auto executor = Common::MakeShared<FingerprintAuthExecutorHdi>(iExecutor);
         if (executor == nullptr) {
             IAM_LOGE("make share failed");
             continue;
         }
         executorList.push_back(executor);
+        fingerprintAuthExecutorList_.push_back(executor);
     }
+}
+
+void FingerprintAuthDriverHdi::OnHdiDisconnect()
+{
+    IAM_LOGI("start");
+    std::lock_guard<std::mutex> guard(mutex_);
+    for (const auto &iExecutor : fingerprintAuthExecutorList_) {
+        if (iExecutor == nullptr) {
+            IAM_LOGE("iExecutor is nullptr");
+            continue;
+        }
+        iExecutor->OnHdiDisconnect();
+    }
+    fingerprintAuthExecutorList_.clear();
+    return;
 }
 } // namespace FingerprintAuth
 } // namespace UserIam

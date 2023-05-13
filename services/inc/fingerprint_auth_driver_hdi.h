@@ -24,6 +24,7 @@
 #include "iam_executor_iauth_driver_hdi.h"
 #include "iam_executor_iauth_executor_hdi.h"
 
+#include "fingerprint_auth_executor_hdi.h"
 #include "fingerprint_auth_interface_adapter.h"
 
 namespace OHOS {
@@ -32,13 +33,17 @@ namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
 class FingerprintAuthDriverHdi : public UserAuth::IAuthDriverHdi, public NoCopyable {
 public:
-    FingerprintAuthDriverHdi(std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter);
+    explicit FingerprintAuthDriverHdi(
+        const std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter);
     ~FingerprintAuthDriverHdi() override = default;
 
     void GetExecutorList(std::vector<std::shared_ptr<UserAuth::IAuthExecutorHdi>> &executorList) override;
+    void OnHdiDisconnect() override;
 
 private:
-    std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter_;
+    static std::mutex mutex_;
+    const std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter_;
+    std::vector<std::shared_ptr<FingerprintAuthExecutorHdi>> fingerprintAuthExecutorList_;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam

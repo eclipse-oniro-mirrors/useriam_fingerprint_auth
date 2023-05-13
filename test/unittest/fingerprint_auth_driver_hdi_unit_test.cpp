@@ -23,11 +23,10 @@
 #include "mock_iexecutor.h"
 #include "mock_ifingerprint_auth_interface.h"
 
-#define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+#define LOG_LABEL OHOS::UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
 
 using namespace testing;
 using namespace testing::ext;
-using namespace OHOS::HDI::FingerprintAuth::V1_0;
 using namespace OHOS::UserIam::Common;
 
 namespace OHOS {
@@ -67,7 +66,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_002, TestSize.Level0)
 {
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(nullptr));
 
@@ -81,9 +80,9 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1));
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1));
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 
@@ -97,11 +96,11 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         return static_cast<int32_t>(HDF_FAILURE);
     });
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 
@@ -115,11 +114,11 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         return static_cast<int32_t>(HDF_SUCCESS);
     });
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 
@@ -133,14 +132,14 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
         EXPECT_TRUE(executor != nullptr);
         list.push_back(executor);
         return static_cast<int32_t>(HDF_SUCCESS);
     });
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 
@@ -154,7 +153,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         list.push_back(sptr<IExecutor>(nullptr));
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
         EXPECT_TRUE(executor != nullptr);
@@ -166,7 +165,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
         return static_cast<int32_t>(HDF_SUCCESS);
     });
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 
@@ -180,14 +179,14 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 {
     sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
     ASSERT_TRUE(interface != nullptr);
-    EXPECT_CALL(*interface, GetExecutorList(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
         EXPECT_TRUE(executor != nullptr);
         list.push_back(executor);
         return static_cast<int32_t>(HDF_FAILURE);
     });
 
-    auto adapter = UserIam::Common::MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
     ASSERT_TRUE(adapter != nullptr);
     EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
 

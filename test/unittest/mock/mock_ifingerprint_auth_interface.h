@@ -18,24 +18,21 @@
 
 #include "gmock/gmock.h"
 
-#include "v1_0/ifingerprint_auth_interface.h"
+#include "fingerprint_auth_hdi.h"
 
 namespace OHOS {
-namespace HDI {
+namespace UserIam {
 namespace FingerprintAuth {
-namespace V1_0 {
-using namespace OHOS;
-using namespace OHOS::HDI;
-
 class MockIFingerprintAuthInterface : public IFingerprintAuthInterface {
 public:
     virtual ~MockIFingerprintAuthInterface() = default;
 
-    MOCK_METHOD1(GetExecutorList, int32_t(std::vector<sptr<IExecutor>> &executorList));
+    MOCK_METHOD1(GetExecutorList, int32_t(std::vector<sptr<IExecutorV1_0>> &executorList));
+
+    MOCK_METHOD1(GetExecutorListV1_1, int32_t(std::vector<sptr<IExecutor>> &executorList));
 };
-} // namespace V1_0
 } // namespace FingerprintAuth
-} // namespace HDI
+} // namespace UserIam
 } // namespace OHOS
 
-#endif // MOCK_IFINGERPRINT_AUTH_INTERFACE_H
+#endif // MOCK_IFINGERPRINT_AUTH_INTERFACE_MOCK_H

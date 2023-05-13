@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2023 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,36 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef FINGERPRINT_AUTH_SERVICE_H
-#define FINGERPRINT_AUTH_SERVICE_H
 
-#include <cstdint>
-#include <mutex>
+#ifndef ISA_COMMAND_PROCESSOR
+#define ISA_COMMAND_PROCESSOR
 
-#include "nocopyable.h"
-#include "system_ability.h"
+#include "fingerprint_auth_hdi.h"
+
+#include "fingerprint_auth_executor_hdi.h"
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-class FingerprintAuthService : public SystemAbility {
-    DECLEAR_SYSTEM_ABILITY(FingerprintAuthService);
-
+namespace UserAuth = OHOS::UserIam::UserAuth;
+class ISaCommandProcessor {
 public:
-    FingerprintAuthService();
-    ~FingerprintAuthService() override = default;
-    static std::shared_ptr<FingerprintAuthService> GetInstance();
+    ISaCommandProcessor() = default;
+    virtual ~ISaCommandProcessor() = default;
 
-    void OnStart() override;
-    void OnStop() override;
-
-private:
-    static std::mutex mutex_;
-    static std::shared_ptr<FingerprintAuthService> instance_;
-    void StartDriverManager();
+    virtual UserAuth::ResultCode ProcessSaCommand(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+        const SaCommand &command) = 0;
+    virtual void OnHdiDisconnect(std::shared_ptr<FingerprintAuthExecutorHdi> executor) = 0;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam
 } // namespace OHOS
 
-#endif // FINGERPRINT_AUTH_SERVICE_H
+#endif // ISA_COMMAND_PROCESSOR

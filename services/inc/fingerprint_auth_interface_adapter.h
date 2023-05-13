@@ -16,12 +16,11 @@
 #ifndef FINGERPRINT_AUTH_INTERFACE_ADAPTER
 #define FINGERPRINT_AUTH_INTERFACE_ADAPTER
 
-#include "v1_0/ifingerprint_auth_interface.h"
+#include "fingerprint_auth_hdi.h"
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-using namespace OHOS::HDI::FingerprintAuth::V1_0;
 class FingerprintAuthInterfaceAdapter {
 public:
     explicit FingerprintAuthInterfaceAdapter() = default;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+ * Copyright (c) 2022 Huawei Device Co., Ltd.
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,18 +13,16 @@
  * limitations under the License.
  */
 
-#ifndef MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER_H
-#define MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER_H
+#ifndef MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER
+#define MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER
 
 #include "fingerprint_auth_interface_adapter.h"
-
+#include "fingerprint_auth_hdi.h"
 #include "gmock/gmock.h"
-#include "v1_0/ifingerprint_auth_interface.h"
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-using namespace OHOS::HDI::FingerprintAuth::V1_0;
 class MockFingerprintAuthInterfaceAdapter : public FingerprintAuthInterfaceAdapter {
 public:
     MockFingerprintAuthInterfaceAdapter() = default;
@@ -36,4 +34,4 @@ public:
 } // namespace UserIam
 } // namespace OHOS
 
-#endif // MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER_H
+#endif // MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER
