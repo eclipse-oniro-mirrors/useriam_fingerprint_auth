@@ -44,7 +44,7 @@ private:
     Rosen::DisplayId defaultDisplayId_;
     Utils::Timer timer_;
     uint32_t currTimerId_;
-    std::recursive_mutex recursive_mutex_;
+    std::recursive_mutex recursiveMutex_;
     bool isIlluminationOn_ = false;
 };
 } // namespace FingerprintAuth

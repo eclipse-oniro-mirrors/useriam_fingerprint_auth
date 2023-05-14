@@ -28,6 +28,7 @@ using namespace testing::ext;
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
+constexpr uint32_t WHITE = 0xFFFFFFFF;
 class FingerprintAuthSensorIllumination : public testing::Test {
 public:
     static void SetUpTestCase();
@@ -56,7 +57,7 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
 {
     auto task = Common::MakeShared<SensorIlluminationTask>();
     IAM_LOGI("Begin EnableSensorIllumination");
-    task->EnableSensorIllumination(500, 500, 200, 0);
+    task->EnableSensorIllumination(500, 500, 200, WHITE);
     IAM_LOGI("End EnableSensorIllumination");
     sleep(2);
 
@@ -87,7 +88,7 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
 {
     SaCommand enableCommand = {
         .id = SaCommandId::ENABLE_SENSOR_ILLUMINATION,
-        .param = { .enableSensorIllumination = { 500, 500, 200, 0, 0 } }
+        .param = { .enableSensorIllumination = { 500, 500, 200, 0, WHITE } }
     };
     SaCommand disableCommand = { SaCommandId::DISABLE_SENSOR_ILLUMINATION };
     SaCommand turnOnCommand = { SaCommandId::TURN_ON_SENSOR_ILLUMINATION };
