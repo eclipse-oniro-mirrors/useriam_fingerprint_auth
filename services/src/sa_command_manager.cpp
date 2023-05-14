@@ -31,6 +31,8 @@ SaCommandManager &SaCommandManager::GetInstance()
 void SaCommandManager::RegisterSaCommandProcessor(std::vector<SaCommandId> commandIds,
     std::shared_ptr<ISaCommandProcessor> processor)
 {
+    IF_FALSE_LOGE_AND_RETURN(processor != nullptr);
+
     std::unique_lock<std::shared_mutex> lock(mutex_);
 
     processors_.insert(processor);
@@ -38,9 +40,6 @@ void SaCommandManager::RegisterSaCommandProcessor(std::vector<SaCommandId> comma
     for (const auto &commandId : commandIds) {
         if (commandId2Processors_.find(commandId) == commandId2Processors_.end()) {
             commandId2Processors_[commandId] = std::set<std::shared_ptr<ISaCommandProcessor>>();
-        } else {
-            IAM_LOGE("duplicate command id %{public}d", commandId);
-            continue;
         }
 
         commandId2Processors_[commandId].insert(processor);

@@ -78,7 +78,8 @@ ResultCode GetBackgroundAlpha(int32_t currScreenBrightness, uint32_t &outAlpha)
     return ResultCode::GENERAL_ERROR;
 }
 
-SkColor ConvertToSkColor(uint32_t color) {
+SkColor ConvertToSkColor(uint32_t color)
+{
     uint8_t *colorBytes = static_cast<uint8_t *>(static_cast<void *>(&color));
     constexpr uint32_t RIndex = 0;
     constexpr uint32_t GIndex = 1;
@@ -87,12 +88,13 @@ SkColor ConvertToSkColor(uint32_t color) {
     return SkColorSetARGB(colorBytes[AIndex], colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex]);
 }
 
-typedef struct {
+struct CanvasParamStruct {
     uint32_t centerXInPx;
     uint32_t centerYInPy;
     uint32_t radius;
     uint32_t color;
-} CanvasParam;
+};
+using CanvasParam = CanvasParamStruct;
 
 ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasParam &param)
 {
@@ -130,7 +132,7 @@ SensorIlluminationTask::~SensorIlluminationTask()
 ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
     uint32_t color)
 {
-    std::lock_guard<std::recursive_mutex> lock(recursive_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
     ScreenStateMonitor::GetInstance().Subscribe();
@@ -159,14 +161,14 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     auto skSurface = surfaceFrame->GetSurface();
     IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
 
-    uint32_t centerXInPx = static_cast<uint32_t>(static_cast<float>(centerX) *  defaultDisplay->GetWidth() 
-        / MAX_X_Y_VALUE);
-    uint32_t centerYInPy = static_cast<uint32_t>(static_cast<float>(centerY) *  defaultDisplay->GetHeight() 
-        / MAX_X_Y_VALUE);
+    uint32_t centerXInPx =
+        static_cast<uint32_t>(static_cast<float>(centerX) * defaultDisplay->GetWidth() / MAX_X_Y_VALUE);
+    uint32_t centerYInPy =
+        static_cast<uint32_t>(static_cast<float>(centerY) * defaultDisplay->GetHeight() / MAX_X_Y_VALUE);
     auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
     IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
-    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam{centerXInPx, centerYInPy, radius, color});
-    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult != ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
+    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPy, radius, color });
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     rsSurface->FlushFrame(surfaceFrame);
 
@@ -182,7 +184,7 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
 
 ResultCode SensorIlluminationTask::DisableSensorIllumination()
 {
-    std::lock_guard<std::recursive_mutex> lock(recursive_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
     TurnOffSensorIllumination();
@@ -195,7 +197,7 @@ ResultCode SensorIlluminationTask::DisableSensorIllumination()
 
 ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
 {
-    std::lock_guard<std::recursive_mutex> lock(recursive_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
     IF_FALSE_LOGE_AND_RETURN_VAL(currRsSurface_ != nullptr, ResultCode::GENERAL_ERROR);
@@ -225,7 +227,7 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
 
 ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
 {
-    std::lock_guard<std::recursive_mutex> lock(recursive_mutex_);
+    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
     IF_FALSE_LOGE_AND_RETURN_VAL(currRsSurface_ != nullptr, ResultCode::GENERAL_ERROR);

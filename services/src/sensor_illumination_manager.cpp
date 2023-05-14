@@ -124,7 +124,7 @@ UserAuth::ResultCode SensorIlluminationManager::EnableSensorIllumination(
     UserAuth::ResultCode enableResultCode = taskInProc->EnableSensorIllumination(
         param.enableSensorIllumination.centerX, param.enableSensorIllumination.centerY,
         param.enableSensorIllumination.radius, param.enableSensorIllumination.color);
-    IF_FALSE_LOGE_AND_RETURN_VAL(enableResultCode != UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(enableResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
 
     executorInProc_ = executor;
     taskInProc_ = taskInProc;
@@ -168,7 +168,7 @@ UserAuth::ResultCode SensorIlluminationManager::TurnOnSensorIllumination(
     }
 
     UserAuth::ResultCode turnOnResultCode = taskInProc_->TurnOnSensorIllumination();
-    IF_FALSE_LOGE_AND_RETURN_VAL(turnOnResultCode != UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(turnOnResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
 
     return UserAuth::SUCCESS;
 }
@@ -187,7 +187,7 @@ UserAuth::ResultCode SensorIlluminationManager::TurnOffSensorIllumination(
     }
 
     UserAuth::ResultCode turnOffResultCode = taskInProc_->TurnOffSensorIllumination();
-    IF_FALSE_LOGE_AND_RETURN_VAL(turnOffResultCode != UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(turnOffResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
 
     return UserAuth::SUCCESS;
 }
