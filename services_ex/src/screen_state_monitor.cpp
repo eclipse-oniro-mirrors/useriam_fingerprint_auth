@@ -107,7 +107,6 @@ void EventSubscriber::OnReceiveEvent(const CommonEventData &eventData)
     if (action != CommonEventSupport::COMMON_EVENT_SCREEN_ON && action != CommonEventSupport::COMMON_EVENT_SCREEN_OFF) {
         return;
     }
-
     IAM_LOGI("receive event %{public}s", action.c_str());
     if (action != CommonEventSupport::COMMON_EVENT_SCREEN_ON) {
         ScreenStateMonitor::GetInstance().SetScreenOn(true);

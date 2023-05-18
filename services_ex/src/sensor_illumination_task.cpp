@@ -48,12 +48,12 @@ constexpr uint32_t INVALID_BRIGHTNESS = -1;
 constexpr uint32_t MAX_DISPLAY_TIME = 200; // ms
 constexpr uint32_t BRIGHTNESS_INDEX = 0;
 constexpr uint32_t ALPHA_INDEX = 1;
-constexpr uint32_t MAX_X_Y_VALUE = 1000; // center X and Y in per thousand
+constexpr uint32_t THOUSAND = 1000l; // center X and Y in per thousand
 constexpr uint8_t BRIGHTNESS_AND_ALPHA[][2] = { { 4, 234 }, { 6, 229 }, { 8, 219 }, { 10, 220 }, { 12, 216 },
-    { 14, 211 }, { 16, 208 }, { 20, 205 }, { 24, 187 }, { 28, 176 }, { 30, 170 }, { 34, 163 }, { 40, 159 },
-    { 46, 142 }, { 50, 140 }, { 56, 140 }, { 64, 125 }, { 74, 121 }, { 84, 111 }, { 94, 101 }, { 104, 92 },
-    { 114, 81 }, { 124, 81 }, { 134, 69 }, { 144, 68 }, { 154, 58 }, { 164, 56 }, { 174, 46 }, { 184, 44 },
-    { 194, 35 }, { 204, 34 }, { 214, 30 }, { 224, 22 }, { 234, 23 }, { 244, 18 }, { 248, 0 }, { 255, 0 } };
+    { 14, 211 }, { 16, 208 }, { 20, 205 }, { 24, 187 }, { 28, 176 }, { 30, 170 }, { 34, 163 }, { 40, 159 }, { 46, 142 },
+    { 50, 140 }, { 56, 140 }, { 64, 125 }, { 74, 121 }, { 84, 111 }, { 94, 101 }, { 104, 92 }, { 114, 81 }, { 124, 81 },
+    { 134, 69 }, { 144, 68 }, { 154, 58 }, { 164, 56 }, { 174, 46 }, { 184, 44 }, { 194, 35 }, { 204, 34 }, { 214, 30 },
+    { 224, 22 }, { 234, 23 }, { 244, 18 }, { 248, 0 }, { 255, 0 } };
 ResultCode GetBackgroundAlpha(int32_t currScreenBrightness, uint32_t &outAlpha)
 {
     for (uint32_t i = 0; i < sizeof(BRIGHTNESS_AND_ALPHA) / sizeof(BRIGHTNESS_AND_ALPHA[0]); i++) {
@@ -116,17 +116,33 @@ ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasP
     canvas->drawCircle(SkPoint::Make(param.centerXInPx, param.centerYInPy), param.radius, paint);
     return ResultCode::SUCCESS;
 }
+
+bool convertThousandthToPx(uint32_t relativeLength, uint32_t full_length, uint32_t &pxLength)
+{
+    uint64_t pxLengthUint64 = static_cast<uint64_t>(relativeLength) * static_cast<uint64_t>(full_length) / THOUSAND;
+    if (pxLengthUint64 > std::numeric_limits<uint32_t>::max()) {
+        IAM_LOGE("pxLengthUint64 is more than UINT32_MAX");
+        return false;
+    }
+    pxLength = static_cast<uint32_t>(pxLengthUint64);
+    return true;
+}
 } // namespace
 
 SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_timer")
 {
+    ScreenStateMonitor::GetInstance().Subscribe();
     timer_.Setup();
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
 {
+    ScreenStateMonitor::GetInstance().Unsubscribe();
     timer_.Unregister(currTimerId_);
     timer_.Shutdown();
+    if (destructCallback_ != nullptr) {
+        destructCallback_();
+    }
 }
 
 ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
@@ -134,8 +150,6 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
 {
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
-
-    ScreenStateMonitor::GetInstance().Subscribe();
 
     RSSurfaceNodeConfig config = { .SurfaceNodeName = "FingerprintSenor" };
 
@@ -161,13 +175,16 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     auto skSurface = surfaceFrame->GetSurface();
     IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
 
-    uint32_t centerXInPx =
-        static_cast<uint32_t>(static_cast<float>(centerX) * defaultDisplay->GetWidth() / MAX_X_Y_VALUE);
-    uint32_t centerYInPy =
-        static_cast<uint32_t>(static_cast<float>(centerY) * defaultDisplay->GetHeight() / MAX_X_Y_VALUE);
+    uint32_t centerXInPx = 0;
+    bool convertRetX = convertThousandthToPx(centerX, defaultDisplay->GetWidth(), centerXInPx);
+    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetX == true, ResultCode::GENERAL_ERROR);
+    uint32_t centerYInPx = 0;
+    bool convertRetY = convertThousandthToPx(centerY, defaultDisplay->GetHeight(), centerYInPx);
+    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetY == true, ResultCode::GENERAL_ERROR);
+
     auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
     IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
-    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPy, radius, color });
+    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPx, radius, color });
     IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     rsSurface->FlushFrame(surfaceFrame);
@@ -213,7 +230,15 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
     }
 
     timer_.Unregister(currTimerId_);
-    currTimerId_ = timer_.Register([self = shared_from_this()]() { self->OnDisplayTimeOut(); },
+    currTimerId_ = timer_.Register(
+        [weak_self = weak_from_this()]() {
+            auto self = weak_self.lock();
+            if (self == nullptr) {
+                IAM_LOGE("object is released");
+                return;
+            }
+            self->OnDisplayTimeOut();
+        },
         MAX_DISPLAY_TIME, true);
 
     DMError result = DisplayManager::GetInstance().AddSurfaceNodeToDisplay(defaultDisplayId_, currRsSurface_);
@@ -252,6 +277,16 @@ void SensorIlluminationTask::OnDisplayTimeOut()
 {
     IAM_LOGI("start");
     TurnOffSensorIllumination();
+}
+
+void SensorIlluminationTask::RegisterDestructCallback(DestructCallback destructCallback)
+{
+    destructCallback_ = destructCallback;
+}
+
+std::shared_ptr<ISensorIlluminationTask> GetSensorIlluminationTask()
+{
+    return Common::MakeShared<SensorIlluminationTask>();
 }
 } // namespace FingerprintAuth
 } // namespace UserIam
