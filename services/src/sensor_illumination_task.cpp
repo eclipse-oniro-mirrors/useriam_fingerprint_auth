@@ -121,6 +121,7 @@ ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasP
 SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_timer")
 {
     timer_.Setup();
+    currTimerId_ = 0;
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
