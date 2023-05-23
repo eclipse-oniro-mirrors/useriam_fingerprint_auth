@@ -117,9 +117,9 @@ ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasP
     return ResultCode::SUCCESS;
 }
 
-bool convertThousandthToPx(uint32_t relativeLength, uint32_t full_length, uint32_t &pxLength)
+bool convertThousandthToPx(uint32_t relativeLength, uint32_t fullLength, uint32_t &pxLength)
 {
-    uint64_t pxLengthUint64 = static_cast<uint64_t>(relativeLength) * static_cast<uint64_t>(full_length) / THOUSAND;
+    uint64_t pxLengthUint64 = static_cast<uint64_t>(relativeLength) * static_cast<uint64_t>(fullLength) / THOUSAND;
     if (pxLengthUint64 > std::numeric_limits<uint32_t>::max()) {
         IAM_LOGE("pxLengthUint64 is more than UINT32_MAX");
         return false;
