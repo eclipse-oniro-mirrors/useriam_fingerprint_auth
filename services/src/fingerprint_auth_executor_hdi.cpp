@@ -109,7 +109,8 @@ IamResultCode FingerprintAuthExecutorHdi::Authenticate(uint64_t scheduleId, cons
     auto callback =
         sptr<IExecutorCallback>(new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
-    int32_t status = executorProxy_->Authenticate(scheduleId, param.templateIdList, param.extraInfo, callback);
+    int32_t status = executorProxy_->AuthenticateV1_1(scheduleId, param.templateIdList, param.endAfterFirstFail,
+        param.extraInfo, callback);
     IamResultCode result = ConvertResultCode(status);
     if (result != IamResultCode::SUCCESS) {
         IAM_LOGE("Authenticate fail result %{public}d", result);

@@ -233,6 +233,13 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIExecutor();
         ASSERT_TRUE(executorProxy != nullptr);
+        EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
+            .WillRepeatedly(
+                [](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback>& callbackObj) {
+                    return HDF_SUCCESS;
+                }
+            );
+
         EXPECT_CALL(*executorProxy, OnRegisterFinish(_, _, _))
             .Times(Exactly(1))
             .WillOnce(
@@ -294,10 +301,10 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Authenti
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIExecutor();
         ASSERT_TRUE(executorProxy != nullptr);
-        EXPECT_CALL(*executorProxy, Authenticate(_, _, _, _))
+        EXPECT_CALL(*executorProxy, AuthenticateV1_1(_, _, _, _, _))
             .Times(Exactly(1))
             .WillOnce([&pair](uint64_t scheduleId, const std::vector<uint64_t> &templateIdList,
-                          const std::vector<uint8_t> &extraInfo,
+                          bool endAfterFirstFail, const std::vector<uint8_t> &extraInfo,
                           const sptr<IExecutorCallback> &callbackObj) { return pair.first; });
         auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
         auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
@@ -312,7 +319,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Authenti
 {
     auto executorProxy = new (std::nothrow) MockIExecutor();
     ASSERT_TRUE(executorProxy != nullptr);
-    EXPECT_CALL(*executorProxy, Authenticate(_, _, _, _)).Times(Exactly(0));
+    EXPECT_CALL(*executorProxy, AuthenticateV1_1(_, _, _, _, _)).Times(Exactly(0));
     auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
     auto ret = executorHdi->Authenticate(0,
         UserAuth::AuthenticateParam{0, std::vector<uint64_t>(), std::vector<uint8_t>(), false}, nullptr);
