@@ -69,31 +69,25 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
     IAM_LOGI("Begin EnableSensorIllumination");
     task->EnableSensorIllumination(500, 500, 200, WHITE);
     IAM_LOGI("End EnableSensorIllumination");
-    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 1");
     task->TurnOnSensorIllumination();
     IAM_LOGI("End TurnOnSensorIllumination 1");
-    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 1");
     task->TurnOffSensorIllumination();
     IAM_LOGI("End TurnOffSensorIllumination 1");
-    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 2");
     task->TurnOnSensorIllumination();
     IAM_LOGI("End TurnOnSensorIllumination 2");
-    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 2");
     task->TurnOffSensorIllumination();
     IAM_LOGI("End TurnOffSensorIllumination 2");
-    sleep(1);
 
     IAM_LOGI("Begin DisableSensorIllumination");
     task->DisableSensorIllumination();
     IAM_LOGI("End DisableSensorIllumination");
     task = nullptr;
-    sleep(1);
 }
 
 HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_002, TestSize.Level0)
@@ -114,30 +108,24 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
     IAM_LOGI("Begin EnableSensorIllumination");
     manager->ProcessSaCommand(executor, enableCommand);
     IAM_LOGI("End EnableSensorIllumination");
-    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 1");
     manager->ProcessSaCommand(executor, turnOnCommand);
     IAM_LOGI("End TurnOnSensorIllumination 1");
-    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 1");
     manager->ProcessSaCommand(executor, turnOffCommand);
     IAM_LOGI("End TurnOffSensorIllumination 1");
-    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 2");
     manager->ProcessSaCommand(executor, turnOnCommand);
     IAM_LOGI("End TurnOnSensorIllumination 2");
-    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 2");
     manager->ProcessSaCommand(executor, turnOffCommand);;
     IAM_LOGI("End TurnOffSensorIllumination 2");
-    sleep(1);
 
     IAM_LOGI("Begin DisableSensorIllumination");
     manager->ProcessSaCommand(executor, disableCommand);
     IAM_LOGI("End DisableSensorIllumination");
-    sleep(1);
 }
 } // namespace FingerprintAuth
 } // namespace UserIam
