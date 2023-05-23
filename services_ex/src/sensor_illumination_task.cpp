@@ -133,6 +133,7 @@ SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_t
 {
     ScreenStateMonitor::GetInstance().Subscribe();
     timer_.Setup();
+    currTimerId_ = 0;
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
