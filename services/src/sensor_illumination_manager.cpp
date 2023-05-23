@@ -20,6 +20,7 @@
 #include "iam_ptr.h"
 
 #include "sa_command_manager.h"
+#include "service_ex_manager.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
 
@@ -114,9 +115,19 @@ UserAuth::ResultCode SensorIlluminationManager::EnableSensorIllumination(
     }
 
     IAM_LOGI("start");
-    auto taskInProc = Common::MakeShared<SensorIlluminationTask>();
-    IF_FALSE_LOGE_AND_RETURN_VAL(taskInProc != nullptr, UserAuth::GENERAL_ERROR);
+    auto acquireRet = ServiceExManager::GetInstance().Acquire();
+    IF_FALSE_LOGE_AND_RETURN_VAL(acquireRet == UserAuth::SUCCESS, UserAuth::GENERAL_ERROR);
 
+    auto taskInProc = ServiceExManager::GetInstance().GetSensorIlluminationTask();
+    if (taskInProc == nullptr) {
+        ServiceExManager::GetInstance().Release();
+        IAM_LOGE("failed to get task");
+        return UserAuth::GENERAL_ERROR;
+    }
+    taskInProc->RegisterDestructCallback([]() {
+        IAM_LOGI("task destruct");
+        ServiceExManager::GetInstance().Release();
+    });
     IF_FALSE_LOGE_AND_RETURN_VAL(param.enableSensorIllumination.centerX < MAX_X_Y_VALUE, UserAuth::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(param.enableSensorIllumination.centerY < MAX_X_Y_VALUE, UserAuth::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(param.enableSensorIllumination.radius < MAX_RADIUS_LEN, UserAuth::GENERAL_ERROR);

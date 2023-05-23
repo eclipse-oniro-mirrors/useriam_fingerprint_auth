@@ -15,11 +15,11 @@
 
 #include "gtest/gtest.h"
 
-#include "sensor_illumination_task.h"
-#include "sensor_illumination_manager.h"
-
 #include "iam_logger.h"
 #include "iam_ptr.h"
+
+#include "sensor_illumination_manager.h"
+#include "service_ex_manager.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
 
@@ -55,33 +55,45 @@ void FingerprintAuthSensorIllumination::TearDown()
 
 HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_001, TestSize.Level0)
 {
-    auto task = Common::MakeShared<SensorIlluminationTask>();
+    auto acquireRet = ServiceExManager::GetInstance().Acquire();
+    EXPECT_TRUE(acquireRet == UserAuth::SUCCESS);
+
+    auto task = ServiceExManager::GetInstance().GetSensorIlluminationTask();
+    EXPECT_TRUE(task != nullptr);
+
+    task->RegisterDestructCallback([]() {
+        IAM_LOGI("task destruct");
+        ServiceExManager::GetInstance().Release();
+    });
+
     IAM_LOGI("Begin EnableSensorIllumination");
     task->EnableSensorIllumination(500, 500, 200, WHITE);
     IAM_LOGI("End EnableSensorIllumination");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 1");
     task->TurnOnSensorIllumination();
     IAM_LOGI("End TurnOnSensorIllumination 1");
-    sleep(5);
+    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 1");
     task->TurnOffSensorIllumination();
     IAM_LOGI("End TurnOffSensorIllumination 1");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 2");
     task->TurnOnSensorIllumination();
     IAM_LOGI("End TurnOnSensorIllumination 2");
-    sleep(5);
+    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 2");
     task->TurnOffSensorIllumination();
     IAM_LOGI("End TurnOffSensorIllumination 2");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin DisableSensorIllumination");
     task->DisableSensorIllumination();
     IAM_LOGI("End DisableSensorIllumination");
+    task = nullptr;
+    sleep(1);
 }
 
 HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_002, TestSize.Level0)
@@ -102,29 +114,30 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
     IAM_LOGI("Begin EnableSensorIllumination");
     manager->ProcessSaCommand(executor, enableCommand);
     IAM_LOGI("End EnableSensorIllumination");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 1");
     manager->ProcessSaCommand(executor, turnOnCommand);
     IAM_LOGI("End TurnOnSensorIllumination 1");
-    sleep(5);
+    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 1");
     manager->ProcessSaCommand(executor, turnOffCommand);
     IAM_LOGI("End TurnOffSensorIllumination 1");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin TurnOnSensorIllumination 2");
     manager->ProcessSaCommand(executor, turnOnCommand);
     IAM_LOGI("End TurnOnSensorIllumination 2");
-    sleep(5);
+    sleep(1);
     IAM_LOGI("Begin TurnOffSensorIllumination 2");
     manager->ProcessSaCommand(executor, turnOffCommand);;
     IAM_LOGI("End TurnOffSensorIllumination 2");
-    sleep(2);
+    sleep(1);
 
     IAM_LOGI("Begin DisableSensorIllumination");
     manager->ProcessSaCommand(executor, disableCommand);
     IAM_LOGI("End DisableSensorIllumination");
+    sleep(1);
 }
 } // namespace FingerprintAuth
 } // namespace UserIam

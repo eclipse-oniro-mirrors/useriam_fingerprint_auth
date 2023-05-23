@@ -23,7 +23,7 @@
 
 #include "fingerprint_auth_executor_hdi.h"
 #include "isa_command_processor.h"
-#include "sensor_illumination_task.h"
+#include "isensor_illumination_task.h"
 
 namespace OHOS {
 namespace UserIam {
@@ -52,7 +52,7 @@ private:
         const SaCommandParam param);
 
     std::shared_ptr<FingerprintAuthExecutorHdi> executorInProc_ = nullptr;
-    std::shared_ptr<SensorIlluminationTask> taskInProc_ = nullptr;
+    std::shared_ptr<ISensorIlluminationTask> taskInProc_ = nullptr;
     std::mutex mutex_;
 };
 } // namespace FingerprintAuth

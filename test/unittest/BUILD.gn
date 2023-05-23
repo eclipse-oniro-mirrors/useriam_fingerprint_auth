@@ -26,13 +26,13 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
 
   deps = [
     "../../services:fingerprintauthservice_source_set",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
+    "graphic_standard:librender_service_client",
     "hiviewdfx_hilog_native:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
@@ -51,13 +51,13 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
 
   deps = [
     "../../services:fingerprintauthservice_source_set",
-    "//foundation/graphic/graphic_2d/rosen/modules/render_service_client:librender_service_client",
     "//third_party/googletest:gtest_main",
   ]
 
   external_deps = [
     "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
+    "graphic_standard:librender_service_client",
     "hiviewdfx_hilog_native:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",

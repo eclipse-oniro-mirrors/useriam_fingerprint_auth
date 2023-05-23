@@ -13,36 +13,35 @@
 
 import("//build/ohos.gni")
 
-config("fingerprintauthservice_config") {
+ohos_source_set("fingerprintauthservice_ex_source_set") {
+  sources = [
+    "src/screen_state_monitor.cpp",
+    "src/sensor_illumination_task.cpp",
+  ]
+
   include_dirs = [
     "inc",
+    "../services/inc",
     "../common/inc",
     "../common/logs",
     "../common/utils",
   ]
-}
 
-ohos_source_set("fingerprintauthservice_source_set") {
-  sources = [
-    "src/fingerprint_auth_driver_hdi.cpp",
-    "src/fingerprint_auth_executor_callback_hdi.cpp",
-    "src/fingerprint_auth_executor_hdi.cpp",
-    "src/fingerprint_auth_interface_adapter.cpp",
-    "src/fingerprint_auth_service.cpp",
-    "src/sa_command_manager.cpp",
-    "src/sensor_illumination_manager.cpp",
-    "src/service_ex_manager.cpp",
-  ]
-
-  public_configs = [ ":fingerprintauthservice_config" ]
+  deps = [ "../services:fingerprintauthservice" ]
 
   external_deps = [
+    "ability_base:want",
     "c_utils:utils",
+    "common_event_service:cesfwk_innerkits",
+    "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
+    "graphic_standard:librender_service_client",
     "hiviewdfx_hilog_native:libhilog",
-    "safwk:system_ability_fwk",
+    "ipc:ipc_single",
+    "power_manager:powermgr_client",
     "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
+    "window_manager:libdm",
   ]
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
@@ -51,11 +50,11 @@ ohos_source_set("fingerprintauthservice_source_set") {
   part_name = "fingerprint_auth"
 }
 
-ohos_shared_library("fingerprintauthservice") {
-  deps = [ ":fingerprintauthservice_source_set" ]
+ohos_shared_library("fingerprintauthservice_ex") {
+  deps = [ ":fingerprintauthservice_ex_source_set" ]
 
   if (use_musl) {
-    version_script = "fingerprint_auth_service_map"
+    version_script = "fingerprint_auth_service_ex_map"
   }
 
   subsystem_name = "useriam"

@@ -25,19 +25,25 @@
 
 #include "iam_common_defines.h"
 
+#include "isensor_illumination_task.h"
+
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-class SensorIlluminationTask : public std::enable_shared_from_this<SensorIlluminationTask>, public NoCopyable {
+class SensorIlluminationTask : public ISensorIlluminationTask,
+                               public std::enable_shared_from_this<SensorIlluminationTask>,
+                               public NoCopyable {
 public:
     SensorIlluminationTask();
     ~SensorIlluminationTask() override;
 
-    UserAuth::ResultCode EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius, uint32_t color);
-    UserAuth::ResultCode DisableSensorIllumination();
-    UserAuth::ResultCode TurnOnSensorIllumination();
-    UserAuth::ResultCode TurnOffSensorIllumination();
-    void OnDisplayTimeOut();
+    UserAuth::ResultCode EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
+        uint32_t color) override;
+    UserAuth::ResultCode DisableSensorIllumination() override;
+    UserAuth::ResultCode TurnOnSensorIllumination() override;
+    UserAuth::ResultCode TurnOffSensorIllumination() override;
+    void OnDisplayTimeOut() override;
+    void RegisterDestructCallback(DestructCallback callback) override;
 
 private:
     std::shared_ptr<Rosen::RSSurfaceNode> currRsSurface_;
@@ -46,7 +52,9 @@ private:
     uint32_t currTimerId_;
     std::recursive_mutex recursiveMutex_;
     bool isIlluminationOn_ = false;
+    DestructCallback destructCallback_;
 };
+std::shared_ptr<ISensorIlluminationTask> GetSensorIlluminationTask();
 } // namespace FingerprintAuth
 } // namespace UserIam
 } // namespace OHOS
