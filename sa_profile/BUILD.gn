@@ -15,6 +15,6 @@ import("//build/ohos.gni")
 import("//build/ohos/sa_profile/sa_profile.gni")
 
 ohos_sa_profile("fingerprintauth_sa_profile") {
-  sources = [ "943.xml" ]
+  sources = [ "943.json" ]
   part_name = "fingerprint_auth"
 }

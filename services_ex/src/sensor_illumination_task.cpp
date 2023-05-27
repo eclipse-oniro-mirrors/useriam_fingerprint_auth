@@ -49,6 +49,7 @@ constexpr uint32_t MAX_DISPLAY_TIME = 200; // ms
 constexpr uint32_t BRIGHTNESS_INDEX = 0;
 constexpr uint32_t ALPHA_INDEX = 1;
 constexpr uint32_t THOUSAND = 1000l; // center X and Y in per thousand
+constexpr int32_t INVALID_DISPLAY_ID = -1;
 constexpr uint8_t BRIGHTNESS_AND_ALPHA[][2] = { { 4, 234 }, { 6, 229 }, { 8, 219 }, { 10, 220 }, { 12, 216 },
     { 14, 211 }, { 16, 208 }, { 20, 205 }, { 24, 187 }, { 28, 176 }, { 30, 170 }, { 34, 163 }, { 40, 159 }, { 46, 142 },
     { 50, 140 }, { 56, 140 }, { 64, 125 }, { 74, 121 }, { 84, 111 }, { 94, 101 }, { 104, 92 }, { 114, 81 }, { 124, 81 },
@@ -134,6 +135,7 @@ SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_t
     ScreenStateMonitor::GetInstance().Subscribe();
     timer_.Setup();
     currTimerId_ = 0;
+    defaultDisplayId_ = INVALID_DISPLAY_ID;
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
