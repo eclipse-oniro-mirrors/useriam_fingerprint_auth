@@ -13,6 +13,10 @@
 
 import("//build/ohos.gni")
 
+config("fingerprintauthservice_ex_config") {
+  include_dirs = [ "inc" ]
+}
+
 ohos_source_set("fingerprintauthservice_ex_source_set") {
   sources = [
     "src/screen_state_monitor.cpp",
@@ -26,6 +30,8 @@ ohos_source_set("fingerprintauthservice_ex_source_set") {
     "../common/logs",
     "../common/utils",
   ]
+
+  public_configs = [ ":fingerprintauthservice_ex_config" ]
 
   deps = [ "../services:fingerprintauthservice" ]
 

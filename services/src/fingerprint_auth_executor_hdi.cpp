@@ -391,8 +391,6 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertAttributeKeyToPropertyType(cons
 
 UserAuth::ResultCode FingerprintAuthExecutorHdi::RegisterSaCommandCallback()
 {
-    IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
-
     sptr<SaCommandCallback> callback = new (std::nothrow) SaCommandCallback(shared_from_this());
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
 
