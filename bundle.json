@@ -28,7 +28,6 @@
           "display_manager",
           "drivers_interface_fingerprint_auth",
           "graphic_standard",
-          "hilog_native",
           "hiviewdfx_hilog_native",
           "ipc",
           "power_manager",
