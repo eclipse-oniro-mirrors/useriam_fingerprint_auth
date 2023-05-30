@@ -46,12 +46,31 @@ void SaCommandManager::RegisterSaCommandProcessor(std::vector<SaCommandId> comma
     }
 }
 
+void SaCommandManager::UnregisterSaCommandProcessor(std::vector<SaCommandId> commandIds,
+    std::shared_ptr<ISaCommandProcessor> processor)
+{
+    IF_FALSE_LOGE_AND_RETURN(processor != nullptr);
+
+    std::unique_lock<std::shared_mutex> lock(mutex_);
+
+    processors_.erase(processor);
+
+    for (const auto &commandId : commandIds) {
+        if (commandId2Processors_.find(commandId) == commandId2Processors_.end()) {
+            continue;
+        }
+
+        commandId2Processors_[commandId].erase(processor);
+    }
+}
+
 UserAuth::ResultCode SaCommandManager::ProcessSaCommands(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
     const std::vector<SaCommand> &commands)
 {
     std::shared_lock<std::shared_mutex> lock(mutex_);
 
     for (const auto &command : commands) {
+        IAM_LOGI("process command %{public}d", command.id);
         auto it = commandId2Processors_.find(command.id);
         IF_FALSE_LOGE_AND_RETURN_VAL(it != commandId2Processors_.end(), UserAuth::GENERAL_ERROR);
         for (const auto &processor : commandId2Processors_[command.id]) {

@@ -245,6 +245,13 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
             .WillOnce(
                 [&pair](const std::vector<uint64_t> &templateIdList, const std::vector<uint8_t> &frameworkPublicKey,
                     const std::vector<uint8_t> &extraInfo) { return pair.first; });
+        if (pair.first == HDF_SUCCESS) {
+            EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
+                .Times(Exactly(1))
+                .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+                    return HDF_SUCCESS;
+                });
+        }
         auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
         UserAuth::TemplateInfo info = {};
         auto ret =
@@ -258,6 +265,29 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
     auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(nullptr);
     auto ret = executorHdi->OnRegisterFinish(std::vector<uint64_t>(), std::vector<uint8_t>(), std::vector<uint8_t>());
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegisterFinish_003, TestSize.Level0)
+{
+    for (const auto &pair : RESULT_CODE_MAP) {
+        auto executorProxy = new (std::nothrow) MockIExecutor();
+        ASSERT_TRUE(executorProxy != nullptr);
+        EXPECT_CALL(*executorProxy, OnRegisterFinish(_, _, _))
+            .Times(Exactly(1))
+            .WillOnce(
+                [](const std::vector<uint64_t> &templateIdList, const std::vector<uint8_t> &frameworkPublicKey,
+                    const std::vector<uint8_t> &extraInfo) { return HDF_SUCCESS; });
+        EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
+            .Times(Exactly(1))
+            .WillOnce([&pair](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+                return pair.first;
+            });
+        auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
+        UserAuth::TemplateInfo info = {};
+        auto ret =
+            executorHdi->OnRegisterFinish(std::vector<uint64_t>(), std::vector<uint8_t>(), std::vector<uint8_t>());
+        EXPECT_TRUE(ret == pair.second);
+    }
 }
 
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Enroll_001, TestSize.Level0)
@@ -487,6 +517,110 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendComm
             IamPropertyMode::PROPERTY_MODE_FREEZE, std::vector<uint8_t>(), executeCallback);
         EXPECT_TRUE(ret == pair.second);
     }
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_GetProperty_001, TestSize.Level0)
+{
+    auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(nullptr);
+    ASSERT_TRUE(executorHdi != nullptr);
+    std::vector<uint64_t> templateIdList;
+    std::vector<UserAuth::Attributes::AttributeKey> keys;
+    UserAuth::Property property = {};
+    auto ret = executorHdi->GetProperty(templateIdList, keys, property);
+    EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_GetProperty_002, TestSize.Level0)
+{
+    auto executorProxy = new (std::nothrow) MockIExecutor();
+    ASSERT_TRUE(executorProxy != nullptr);
+    auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
+    ASSERT_TRUE(executorHdi != nullptr);
+    std::vector<uint64_t> templateIdList;
+    std::vector<UserAuth::Attributes::AttributeKey> keys = { UserAuth::Attributes::ATTR_SIGNATURE };
+    UserAuth::Property property = {};
+    auto ret = executorHdi->GetProperty(templateIdList, keys, property);
+    EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_GetProperty_003, TestSize.Level0)
+{
+    for (const auto &pair : RESULT_CODE_MAP) {
+        auto executorProxy = new (std::nothrow) MockIExecutor();
+        ASSERT_TRUE(executorProxy != nullptr);
+        EXPECT_CALL(*executorProxy, GetProperty(_, _, _)).Times(Exactly(1)).WillOnce([&pair](
+            const std::vector<uint64_t> &templateIdList,
+            const std::vector<GetPropertyType> &propertyTypes, Property &property) {
+                return pair.first;
+            });
+        auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
+        ASSERT_TRUE(executorHdi != nullptr);
+        std::vector<uint64_t> templateIdList;
+        std::vector<UserAuth::Attributes::AttributeKey> keys;
+        if (pair.first != HDF_SUCCESS) {
+            keys.push_back(UserAuth::Attributes::ATTR_PIN_SUB_TYPE);
+        }
+        UserAuth::Property property = {};
+        auto ret = executorHdi->GetProperty(templateIdList, keys, property);
+        EXPECT_TRUE(ret == pair.second);
+    }
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SetCachedTemplates_001, TestSize.Level0)
+{
+    auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(nullptr);
+    ASSERT_TRUE(executorHdi != nullptr);
+    std::vector<uint64_t> templateIdList;
+    auto ret = executorHdi->SetCachedTemplates(templateIdList);
+    EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SetCachedTemplates_002, TestSize.Level0)
+{
+    for (const auto &pair : RESULT_CODE_MAP) {
+        auto executorProxy = new (std::nothrow) MockIExecutor();
+        ASSERT_TRUE(executorProxy != nullptr);
+        EXPECT_CALL(*executorProxy, SetCachedTemplates(_)).Times(Exactly(1)).WillOnce([&pair](
+            const std::vector<uint64_t> &templateIdList) {
+                return pair.first;
+            });
+        auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
+        ASSERT_TRUE(executorHdi != nullptr);
+        std::vector<uint64_t> templateIdList;
+        auto ret = executorHdi->SetCachedTemplates(templateIdList);
+        EXPECT_TRUE(ret == pair.second);
+    }
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnHdiDisconnect_001, TestSize.Level0)
+{
+    auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(nullptr);
+    ASSERT_TRUE(executorHdi != nullptr);
+    executorHdi->OnHdiDisconnect();
+}
+
+HWTEST_F(FingerprintAuthExecutorHdiUnitTest,
+    FingerprintAuthExecutorHdi_SaCommandCallback_OnSaCommands_001, TestSize.Level0)
+{
+    auto executorProxy = new (std::nothrow) MockIExecutor();
+    ASSERT_TRUE(executorProxy != nullptr);
+    EXPECT_CALL(*executorProxy, OnRegisterFinish(_, _, _))
+        .Times(Exactly(1))
+        .WillOnce(
+            [](const std::vector<uint64_t> &templateIdList, const std::vector<uint8_t> &frameworkPublicKey,
+                const std::vector<uint8_t> &extraInfo) { return HDF_SUCCESS; });
+    EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
+        .Times(Exactly(1))
+        .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+            std::vector<SaCommand> commands;
+            callbackObj->OnSaCommands(commands);
+            return HDF_SUCCESS;
+        });
+    auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
+    UserAuth::TemplateInfo info = {};
+    auto ret =
+        executorHdi->OnRegisterFinish(std::vector<uint64_t>(), std::vector<uint8_t>(), std::vector<uint8_t>());
+    EXPECT_TRUE(ret == IamResultCode::SUCCESS);
 }
 } // namespace FingerprintAuth
 } // namespace UserIam

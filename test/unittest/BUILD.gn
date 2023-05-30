@@ -20,12 +20,15 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
     "fingerprint_auth_driver_hdi_unit_test.cpp",
     "fingerprint_auth_executor_callback_hdi_unit_test.cpp",
     "fingerprint_auth_executor_hdi_unit_test.cpp",
+    "sa_command_manager_unit_test.cpp",
+    "screen_state_monitor_unit_test.cpp",
   ]
 
   include_dirs = [ "mock" ]
 
   deps = [
     "../../services:fingerprintauthservice_source_set",
+    "../../services_ex:fingerprintauthservice_ex_source_set",
     "//third_party/googletest:gmock_main",
     "//third_party/googletest:gtest_main",
   ]

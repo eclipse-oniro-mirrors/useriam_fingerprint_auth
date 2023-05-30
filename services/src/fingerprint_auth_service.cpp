@@ -61,7 +61,7 @@ const std::vector<std::shared_ptr<FingerprintAuthDriverHdi>> FINGERPRINT_AUTH_DR
     FINGERPRINT_AUTH_DEFAULT_HDI
 };
 // setup brightness manager
-const auto SensorIlluminationManager = SensorIlluminationManager::GetInstance();
+const auto FINGER_SENSOR_ILLUMINATION_MANAGER = SensorIlluminationManager::GetInstance();
 } // namespace
 std::mutex FingerprintAuthService::mutex_;
 std::shared_ptr<FingerprintAuthService> FingerprintAuthService::instance_ = nullptr;

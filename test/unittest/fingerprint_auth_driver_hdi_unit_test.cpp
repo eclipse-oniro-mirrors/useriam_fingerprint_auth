@@ -195,6 +195,28 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
     driverHdi.GetExecutorList(executorList);
     EXPECT_TRUE(executorList.size() == 0);
 }
+
+HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_OnHdiDisconnectTest_001, TestSize.Level0)
+{
+    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    ASSERT_TRUE(interface != nullptr);
+    EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
+        auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
+        EXPECT_TRUE(executor != nullptr);
+        list.push_back(executor);
+        return static_cast<int32_t>(HDF_SUCCESS);
+    });
+
+    auto adapter = MakeShared<MockFingerprintAuthInterfaceAdapter>();
+    ASSERT_TRUE(adapter != nullptr);
+    EXPECT_CALL(*adapter, Get()).Times(Exactly(1)).WillOnce(Return(interface));
+
+    FingerprintAuthDriverHdi driverHdi(adapter);
+    std::vector<std::shared_ptr<UserAuth::IAuthExecutorHdi>> executorList;
+    driverHdi.GetExecutorList(executorList);
+    EXPECT_TRUE(executorList.size() == 1);
+    driverHdi.OnHdiDisconnect();
+}
 } // namespace FingerprintAuth
 } // namespace UserIam
 } // namespace OHOS
