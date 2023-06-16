@@ -45,7 +45,7 @@ using namespace Rosen;
 
 namespace {
 constexpr uint32_t INVALID_BRIGHTNESS = -1;
-constexpr uint32_t MAX_DISPLAY_TIME = 200; // ms
+constexpr uint32_t MAX_DISPLAY_TIME = 1000; // ms
 constexpr uint32_t BRIGHTNESS_INDEX = 0;
 constexpr uint32_t ALPHA_INDEX = 1;
 constexpr uint32_t THOUSAND = 1000l; // center X and Y in per thousand
