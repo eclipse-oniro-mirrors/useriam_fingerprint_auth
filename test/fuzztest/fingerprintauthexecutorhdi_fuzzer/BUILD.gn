@@ -35,7 +35,7 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
 
   external_deps = [
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
-    "hilog:libhilog",
+    "hiviewdfx_hilog_native:libhilog",
     "user_auth_framework:userauth_executors",
   ]
 
