@@ -36,7 +36,7 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
   external_deps = [
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
     "graphic_standard:librender_service_client",
-    "hilog:libhilog",
+    "hiviewdfx_hilog_native:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
   ]
@@ -61,7 +61,7 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
     "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
     "graphic_standard:librender_service_client",
-    "hilog:libhilog",
+    "hiviewdfx_hilog_native:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
   ]
