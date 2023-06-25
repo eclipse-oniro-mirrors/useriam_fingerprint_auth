@@ -34,7 +34,7 @@ ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
 
   deps = [ "../../../services:fingerprintauthservice_source_set" ]
 
-  external_deps = [ "hiviewdfx_hilog_native:libhilog" ]
+  external_deps = [ "hilog:libhilog" ]
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 
