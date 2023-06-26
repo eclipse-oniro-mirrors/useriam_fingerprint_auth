@@ -29,6 +29,7 @@ ohos_source_set("fingerprintauthservice_source_set") {
     "src/fingerprint_auth_executor_hdi.cpp",
     "src/fingerprint_auth_interface_adapter.cpp",
     "src/fingerprint_auth_service.cpp",
+    "src/memory_guard.cpp",
     "src/sa_command_manager.cpp",
     "src/sensor_illumination_manager.cpp",
     "src/service_ex_manager.cpp",
@@ -44,6 +45,12 @@ ohos_source_set("fingerprintauthservice_source_set") {
     "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
   ]
+
+  if (use_musl) {
+    if (use_jemalloc && use_jemalloc_dfx_intf) {
+      defines = [ "CONFIG_USE_JEMALLOC_DFX_INTF" ]
+    }
+  }
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 
