@@ -29,6 +29,7 @@
 #include "iam_check.h"
 #include "iam_executor_framework_types.h"
 #include "iam_logger.h"
+#include "memory_guard.h"
 
 #include "fingerprint_auth_defines.h"
 #include "fingerprint_auth_executor_callback_hdi.h"
@@ -407,6 +408,7 @@ UserAuth::ResultCode FingerprintAuthExecutorHdi::RegisterSaCommandCallback()
 int32_t FingerprintAuthExecutorHdi::SaCommandCallback::OnSaCommands(const std::vector<SaCommand> &commands)
 {
     IAM_LOGI("start");
+    MemoryGuard guard;
     IamResultCode result = SaCommandManager::GetInstance().ProcessSaCommands(executorHdi_, commands);
     if (result != IamResultCode::SUCCESS) {
         IAM_LOGE("ProcessSaCommands fail");
