@@ -48,6 +48,7 @@ public:
 private:
     std::shared_ptr<Rosen::RSSurfaceNode> currRsSurface_;
     Rosen::DisplayId defaultDisplayId_;
+    Rosen::ScreenId defaultScreenId_;
     Utils::Timer timer_;
     uint32_t currTimerId_;
     std::recursive_mutex recursiveMutex_;

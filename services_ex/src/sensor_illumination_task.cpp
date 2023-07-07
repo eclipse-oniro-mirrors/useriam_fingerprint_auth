@@ -24,6 +24,7 @@
 #include "system_ability_definition.h"
 #include "system_ability_status_change_stub.h"
 #include "transaction/rs_transaction.h"
+#include "transaction/rs_interfaces.h"
 #include "ui/rs_surface_extractor.h"
 
 #include "iam_check.h"
@@ -50,6 +51,7 @@ constexpr uint32_t BRIGHTNESS_INDEX = 0;
 constexpr uint32_t ALPHA_INDEX = 1;
 constexpr uint32_t THOUSAND = 1000l; // center X and Y in per thousand
 constexpr int32_t INVALID_DISPLAY_ID = -1;
+constexpr float MAX_ZORDER = 100000.0f;
 constexpr uint8_t BRIGHTNESS_AND_ALPHA[][2] = { { 4, 234 }, { 6, 229 }, { 8, 219 }, { 10, 220 }, { 12, 216 },
     { 14, 211 }, { 16, 208 }, { 20, 205 }, { 24, 187 }, { 28, 176 }, { 30, 170 }, { 34, 163 }, { 40, 159 }, { 46, 142 },
     { 50, 140 }, { 56, 140 }, { 64, 125 }, { 74, 121 }, { 84, 111 }, { 94, 101 }, { 104, 92 }, { 114, 81 }, { 124, 81 },
@@ -136,6 +138,7 @@ SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_t
     timer_.Setup();
     currTimerId_ = 0;
     defaultDisplayId_ = INVALID_DISPLAY_ID;
+    defaultScreenId_ = Rosen::INVALID_SCREEN_ID;
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
@@ -195,6 +198,7 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     auto transactionPolicy = RSTransactionProxy::GetInstance();
     transactionPolicy->FlushImplicitTransaction();
 
+    defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
     defaultDisplayId_ = defaultDisplay->GetId();
     currRsSurface_ = surfaceNode;
 
@@ -244,8 +248,10 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
         },
         MAX_DISPLAY_TIME, true);
 
-    DMError result = DisplayManager::GetInstance().AddSurfaceNodeToDisplay(defaultDisplayId_, currRsSurface_);
-    IF_FALSE_LOGE_AND_RETURN_VAL(result == DMError::DM_OK, ResultCode::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
+    currRsSurface_->SetPositionZ(MAX_ZORDER);
+    currRsSurface_->AttachToDisplay(defaultScreenId_);
+    OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
 
     isIlluminationOn_ = true;
 
@@ -267,8 +273,9 @@ ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
 
     timer_.Unregister(currTimerId_);
 
-    DMError result = DisplayManager::GetInstance().RemoveSurfaceNodeFromDisplay(defaultDisplayId_, currRsSurface_);
-    IF_FALSE_LOGE_AND_RETURN_VAL(result == DMError::DM_OK, ResultCode::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
+    currRsSurface_->DetachToDisplay(defaultScreenId_);
+    OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
 
     isIlluminationOn_ = false;
 
