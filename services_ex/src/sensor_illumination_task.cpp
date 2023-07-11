@@ -150,7 +150,66 @@ SensorIlluminationTask::~SensorIlluminationTask()
         destructCallback_();
     }
 }
+#ifdef NEW_RENDER_CONTEXT
+ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
+    uint32_t color)
+{
+    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
+    IAM_LOGI("start");
 
+    RSSurfaceNodeConfig config = { .SurfaceNodeName = "FingerprintSenor" };
+
+    auto surfaceNode = RSSurfaceNode::Create(config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE);
+    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceNode != nullptr, ResultCode::GENERAL_ERROR);
+
+    auto defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
+    IF_FALSE_LOGE_AND_RETURN_VAL(defaultDisplay != nullptr, ResultCode::GENERAL_ERROR);
+
+    surfaceNode->SetBounds(0, 0, defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
+
+    surfaceNode->SetFingerprint(true);
+
+    std::shared_ptr<RSRenderSurface> rsSurface = RSSurfaceExtractor::ExtractRSSurface(surfaceNode);
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface != nullptr, ResultCode::GENERAL_ERROR);
+
+    auto renderContext = RenderContextBaseFactory::CreateRenderContext(RenderType::GLES);
+    IF_FALSE_LOGE_AND_RETURN_VAL(renderContext != nullptr, ResultCode::GENERAL_ERROR);
+    auto drawingContext = Common::MakeShared<DrawingContext>(RenderType::GLES);
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawingContext != nullptr, ResultCode::GENERAL_ERROR);
+
+    renderContext->Init();
+    rsSurface->SetRenderContext(renderContext);
+    rsSurface->SetDrawingContext(drawingContext);
+    auto surfaceFrame = rsSurface->RequestFrame(defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
+    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceFrame != nullptr, ResultCode::GENERAL_ERROR);
+    auto skSurface = rsSurface->GetSurface();
+    IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
+
+    uint32_t centerXInPx = 0;
+    bool convertRetX = convertThousandthToPx(centerX, defaultDisplay->GetWidth(), centerXInPx);
+    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetX == true, ResultCode::GENERAL_ERROR);
+    uint32_t centerYInPx = 0;
+    bool convertRetY = convertThousandthToPx(centerY, defaultDisplay->GetHeight(), centerYInPx);
+    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetY == true, ResultCode::GENERAL_ERROR);
+
+    auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
+    IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
+    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPx, radius, color });
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
+
+    rsSurface->FlushFrame();
+
+    auto transactionPolicy = RSTransactionProxy::GetInstance();
+    transactionPolicy->FlushImplicitTransaction();
+
+    defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
+    defaultDisplayId_ = defaultDisplay->GetId();
+    currRsSurface_ = surfaceNode;
+
+    IAM_LOGI("success");
+    return ResultCode::SUCCESS;
+}
+#else
 ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
     uint32_t color)
 {
@@ -205,7 +264,7 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
 }
-
+#endif
 ResultCode SensorIlluminationTask::DisableSensorIllumination()
 {
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
