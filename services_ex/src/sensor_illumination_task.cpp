@@ -45,12 +45,10 @@ using namespace UserAuth;
 using namespace Rosen;
 
 namespace {
-constexpr uint32_t INVALID_BRIGHTNESS = -1;
 constexpr uint32_t MAX_DISPLAY_TIME = 1000; // ms
 constexpr uint32_t BRIGHTNESS_INDEX = 0;
 constexpr uint32_t ALPHA_INDEX = 1;
 constexpr uint32_t THOUSAND = 1000l; // center X and Y in per thousand
-constexpr int32_t INVALID_DISPLAY_ID = -1;
 constexpr float MAX_ZORDER = 100000.0f;
 constexpr uint8_t BRIGHTNESS_AND_ALPHA[][2] = { { 4, 234 }, { 6, 229 }, { 8, 219 }, { 10, 220 }, { 12, 216 },
     { 14, 211 }, { 16, 208 }, { 20, 205 }, { 24, 187 }, { 28, 176 }, { 30, 170 }, { 34, 163 }, { 40, 159 }, { 46, 142 },
@@ -91,25 +89,11 @@ SkColor ConvertToSkColor(uint32_t color)
     return SkColorSetARGB(colorBytes[AIndex], colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex]);
 }
 
-struct CanvasParamStruct {
-    uint32_t centerXInPx;
-    uint32_t centerYInPy;
-    uint32_t radius;
-    uint32_t color;
-};
-using CanvasParam = CanvasParamStruct;
-
 ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasParam &param)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
 
-    uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
-    IF_FALSE_LOGE_AND_RETURN_VAL(brightness != INVALID_BRIGHTNESS, ResultCode::GENERAL_ERROR);
-    IAM_LOGI("get device brightness %{public}u", brightness);
-    uint32_t alpha;
-    ResultCode result = GetBackgroundAlpha(brightness, alpha);
-    IF_FALSE_LOGE_AND_RETURN_VAL(result == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
-    canvas->clear(SkColorSetARGB(alpha, 0x00, 0x00, 0x00));
+    canvas->clear(SkColorSetARGB(param.alpha, 0x00, 0x00, 0x00));
 
     SkPaint paint;
     paint.setStyle(SkPaint::kFill_Style);
@@ -136,9 +120,6 @@ SensorIlluminationTask::SensorIlluminationTask() : timer_("sensor_illumination_t
 {
     ScreenStateMonitor::GetInstance().Subscribe();
     timer_.Setup();
-    currTimerId_ = 0;
-    defaultDisplayId_ = INVALID_DISPLAY_ID;
-    defaultScreenId_ = Rosen::INVALID_SCREEN_ID;
 }
 
 SensorIlluminationTask::~SensorIlluminationTask()
@@ -150,7 +131,7 @@ SensorIlluminationTask::~SensorIlluminationTask()
         destructCallback_();
     }
 }
-#ifdef NEW_RENDER_CONTEXT
+
 ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
     uint32_t color)
 {
@@ -159,86 +140,24 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
 
     RSSurfaceNodeConfig config = { .SurfaceNodeName = "FingerprintSenor" };
 
-    auto surfaceNode = RSSurfaceNode::Create(config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE);
-    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceNode != nullptr, ResultCode::GENERAL_ERROR);
+    auto rsSurfaceNode = RSSurfaceNode::Create(config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE);
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurfaceNode != nullptr, ResultCode::GENERAL_ERROR);
 
     auto defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultDisplay != nullptr, ResultCode::GENERAL_ERROR);
 
-    surfaceNode->SetBounds(0, 0, defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
+    int32_t width = defaultDisplay->GetWidth();
+    int32_t height = defaultDisplay->GetHeight();
+    rsSurfaceNode->SetBounds(0, 0, width, height);
+    rsSurfaceNode->SetFingerprint(true);
 
-    surfaceNode->SetFingerprint(true);
-
-    std::shared_ptr<RSRenderSurface> rsSurface = RSSurfaceExtractor::ExtractRSSurface(surfaceNode);
-    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface != nullptr, ResultCode::GENERAL_ERROR);
-
-    auto renderContext = RenderContextBaseFactory::CreateRenderContext(RenderType::GLES);
-    IF_FALSE_LOGE_AND_RETURN_VAL(renderContext != nullptr, ResultCode::GENERAL_ERROR);
-    auto drawingContext = Common::MakeShared<DrawingContext>(RenderType::GLES);
-    IF_FALSE_LOGE_AND_RETURN_VAL(drawingContext != nullptr, ResultCode::GENERAL_ERROR);
-
-    renderContext->Init();
-    rsSurface->SetRenderContext(renderContext);
-    rsSurface->SetDrawingContext(drawingContext);
-    auto surfaceFrame = rsSurface->RequestFrame(defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
-    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceFrame != nullptr, ResultCode::GENERAL_ERROR);
-    auto skSurface = rsSurface->GetSurface();
-    IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
-
-    uint32_t centerXInPx = 0;
-    bool convertRetX = convertThousandthToPx(centerX, defaultDisplay->GetWidth(), centerXInPx);
-    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetX == true, ResultCode::GENERAL_ERROR);
-    uint32_t centerYInPx = 0;
-    bool convertRetY = convertThousandthToPx(centerY, defaultDisplay->GetHeight(), centerYInPx);
-    IF_FALSE_LOGE_AND_RETURN_VAL(convertRetY == true, ResultCode::GENERAL_ERROR);
-
-    auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
-    IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
-    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPx, radius, color });
-    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
-
-    rsSurface->FlushFrame();
-
-    auto transactionPolicy = RSTransactionProxy::GetInstance();
-    transactionPolicy->FlushImplicitTransaction();
-
-    defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
-    defaultDisplayId_ = defaultDisplay->GetId();
-    currRsSurface_ = surfaceNode;
-
-    IAM_LOGI("success");
-    return ResultCode::SUCCESS;
-}
-#else
-ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, uint32_t centerY, uint32_t radius,
-    uint32_t color)
-{
-    std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
-    IAM_LOGI("start");
-
-    RSSurfaceNodeConfig config = { .SurfaceNodeName = "FingerprintSenor" };
-
-    auto surfaceNode = RSSurfaceNode::Create(config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE);
-    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceNode != nullptr, ResultCode::GENERAL_ERROR);
-
-    auto defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
-    IF_FALSE_LOGE_AND_RETURN_VAL(defaultDisplay != nullptr, ResultCode::GENERAL_ERROR);
-
-    surfaceNode->SetBounds(0, 0, defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
-
-    surfaceNode->SetFingerprint(true);
-
-    std::shared_ptr<RSSurface> rsSurface = RSSurfaceExtractor::ExtractRSSurface(surfaceNode);
+    std::shared_ptr<RSSurface> rsSurface = RSSurfaceExtractor::ExtractRSSurface(rsSurfaceNode);
     IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface != nullptr, ResultCode::GENERAL_ERROR);
 
     auto renderContext = std::shared_ptr<RenderContext>(RenderContextFactory::GetInstance().CreateNewEngine());
     IF_FALSE_LOGE_AND_RETURN_VAL(renderContext != nullptr, ResultCode::GENERAL_ERROR);
     renderContext->InitializeEglContext();
     rsSurface->SetRenderContext(renderContext.get());
-    auto surfaceFrame = rsSurface->RequestFrame(defaultDisplay->GetWidth(), defaultDisplay->GetHeight());
-    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceFrame != nullptr, ResultCode::GENERAL_ERROR);
-    auto skSurface = surfaceFrame->GetSurface();
-    IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
 
     uint32_t centerXInPx = 0;
     bool convertRetX = convertThousandthToPx(centerX, defaultDisplay->GetWidth(), centerXInPx);
@@ -247,33 +166,77 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     bool convertRetY = convertThousandthToPx(centerY, defaultDisplay->GetHeight(), centerYInPx);
     IF_FALSE_LOGE_AND_RETURN_VAL(convertRetY == true, ResultCode::GENERAL_ERROR);
 
-    auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
-    IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
-    auto drawCanvasResult = DrawCanvas(canvas, CanvasParam { centerXInPx, centerYInPx, radius, color });
-    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
-
-    rsSurface->FlushFrame(surfaceFrame);
-
-    auto transactionPolicy = RSTransactionProxy::GetInstance();
-    transactionPolicy->FlushImplicitTransaction();
+    canvasParam_ = (CanvasParam) {
+        .centerXInPx = centerXInPx,
+        .centerYInPy = centerYInPx,
+        .radius = radius,
+        .color = color,
+        .alpha = 0,
+        .frameWidth = width,
+        .frameHeight = height
+    };
 
     defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
     defaultDisplayId_ = defaultDisplay->GetId();
-    currRsSurface_ = surfaceNode;
+    rsSurfaceNode_ = rsSurfaceNode;
+    rsSurface_ = rsSurface;
+    renderContext_ = renderContext;
+
+    ResultCode drawResult = DrawSurfaceNode();
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
 }
-#endif
+
 ResultCode SensorIlluminationTask::DisableSensorIllumination()
 {
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
     TurnOffSensorIllumination();
-    currRsSurface_ = nullptr;
+    rsSurfaceNode_ = nullptr;
 
     ScreenStateMonitor::GetInstance().Unsubscribe();
+    IAM_LOGI("success");
+    return ResultCode::SUCCESS;
+}
+
+ResultCode SensorIlluminationTask::DrawSurfaceNode()
+{
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface_ != nullptr, ResultCode::GENERAL_ERROR);
+
+    IAM_LOGI("start");
+
+    uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
+    IF_FALSE_LOGE_AND_RETURN_VAL(brightness != INVALID_BRIGHTNESS, ResultCode::GENERAL_ERROR);
+    IAM_LOGI("get device brightness %{public}u", brightness);
+
+    if (brightness == brightness_) {
+        IAM_LOGI("brightness is same, no need redraw");
+        return ResultCode::SUCCESS;
+    }
+    brightness_ = brightness;
+
+    uint32_t alpha;
+    ResultCode result = GetBackgroundAlpha(brightness_, alpha);
+    IF_FALSE_LOGE_AND_RETURN_VAL(result == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
+    canvasParam_.alpha = alpha;
+
+    auto surfaceFrame = rsSurface_->RequestFrame(canvasParam_.frameWidth, canvasParam_.frameHeight);
+    IF_FALSE_LOGE_AND_RETURN_VAL(surfaceFrame != nullptr, ResultCode::GENERAL_ERROR);
+    auto skSurface = surfaceFrame->GetSurface();
+    IF_FALSE_LOGE_AND_RETURN_VAL(skSurface != nullptr, ResultCode::GENERAL_ERROR);
+
+    auto canvas = Common::MakeShared<RSPaintFilterCanvas>(skSurface.get());
+    IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
+    auto drawCanvasResult = DrawCanvas(canvas, canvasParam_);
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
+
+    rsSurface_->FlushFrame(surfaceFrame);
+    auto transactionPolicy = RSTransactionProxy::GetInstance();
+    transactionPolicy->FlushImplicitTransaction();
+
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
 }
@@ -283,7 +246,7 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
-    IF_FALSE_LOGE_AND_RETURN_VAL(currRsSurface_ != nullptr, ResultCode::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurfaceNode_ != nullptr, ResultCode::GENERAL_ERROR);
 
     if (ScreenStateMonitor::GetInstance().GetScreenOn() == false) {
         IAM_LOGI("screen is not on, no need turn on display");
@@ -294,6 +257,9 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
         IAM_LOGI("illumination already on");
         return ResultCode::SUCCESS;
     }
+
+    ResultCode drawResult = DrawSurfaceNode();
+    IF_FALSE_LOGE_AND_RETURN_VAL(drawResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     timer_.Unregister(currTimerId_);
     currTimerId_ = timer_.Register(
@@ -308,8 +274,8 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
         MAX_DISPLAY_TIME, true);
 
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
-    currRsSurface_->SetPositionZ(MAX_ZORDER);
-    currRsSurface_->AttachToDisplay(defaultScreenId_);
+    rsSurfaceNode_->SetPositionZ(MAX_ZORDER);
+    rsSurfaceNode_->AttachToDisplay(defaultScreenId_);
     OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
 
     isIlluminationOn_ = true;
@@ -323,7 +289,7 @@ ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
 
-    IF_FALSE_LOGE_AND_RETURN_VAL(currRsSurface_ != nullptr, ResultCode::GENERAL_ERROR);
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsSurfaceNode_ != nullptr, ResultCode::GENERAL_ERROR);
 
     if (!isIlluminationOn_) {
         IAM_LOGI("illumination already off");
@@ -333,7 +299,7 @@ ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
     timer_.Unregister(currTimerId_);
 
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
-    currRsSurface_->DetachToDisplay(defaultScreenId_);
+    rsSurfaceNode_->DetachToDisplay(defaultScreenId_);
     OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
 
     isIlluminationOn_ = false;

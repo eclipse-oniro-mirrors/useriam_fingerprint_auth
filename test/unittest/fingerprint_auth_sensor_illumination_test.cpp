@@ -120,7 +120,7 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
     manager->ProcessSaCommand(executor, turnOnCommand);
     IAM_LOGI("End TurnOnSensorIllumination 2");
     IAM_LOGI("Begin TurnOffSensorIllumination 2");
-    manager->ProcessSaCommand(executor, turnOffCommand);;
+    manager->ProcessSaCommand(executor, turnOffCommand);
     IAM_LOGI("End TurnOffSensorIllumination 2");
 
     IAM_LOGI("Begin DisableSensorIllumination");
