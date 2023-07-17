@@ -50,6 +50,11 @@ ohos_source_set("fingerprintauthservice_ex_source_set") {
     "window_manager:libdm",
   ]
 
+  if (defined(use_rosen_drawing) && use_rosen_drawing) {
+    external_deps += [ "graphic_2d:2d_graphics" ]
+    defines = [ "USE_ROSEN_DRAWING" ]
+  }
+
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 
   subsystem_name = "useriam"

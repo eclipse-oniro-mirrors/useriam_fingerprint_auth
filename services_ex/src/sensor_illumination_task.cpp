@@ -79,6 +79,7 @@ ResultCode GetBackgroundAlpha(int32_t currScreenBrightness, uint32_t &outAlpha)
     return ResultCode::GENERAL_ERROR;
 }
 
+#ifndef USE_ROSEN_DRAWING
 SkColor ConvertToSkColor(uint32_t color)
 {
     uint8_t *colorBytes = static_cast<uint8_t *>(static_cast<void *>(&color));
@@ -88,11 +89,24 @@ SkColor ConvertToSkColor(uint32_t color)
     constexpr uint32_t AIndex = 3;
     return SkColorSetARGB(colorBytes[AIndex], colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex]);
 }
+#else
+Drawing::ColorQuad ConvertToDrawingColor(uint32_t color)
+{
+    uint8_t *colorBytes = static_cast<uint8_t *>(static_cast<void *>(&color));
+    constexpr uint32_t RIndex = 0;
+    constexpr uint32_t GIndex = 1;
+    constexpr uint32_t BIndex = 2;
+    constexpr uint32_t AIndex = 3;
+    return Drawing::Color::ColorQuadSetARGB(
+        colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex], colorBytes[AIndex]);
+}
+#endif
 
 ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasParam &param)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(canvas != nullptr, ResultCode::GENERAL_ERROR);
 
+#ifndef USE_ROSEN_DRAWING
     canvas->clear(SkColorSetARGB(param.alpha, 0x00, 0x00, 0x00));
 
     SkPaint paint;
@@ -101,6 +115,17 @@ ResultCode DrawCanvas(std::shared_ptr<RSPaintFilterCanvas> canvas, const CanvasP
     paint.setColor(ConvertToSkColor(param.color));
 
     canvas->drawCircle(SkPoint::Make(param.centerXInPx, param.centerYInPy), param.radius, paint);
+#else
+    canvas->Clear(Drawing::Color::ColorQuadSetARGB(0x00, 0x00, 0x00, param.alpha));
+
+    Drawing::Brush brush;
+    brush.SetAntiAlias(true);
+    brush.SetColor(ConvertToDrawingColor(param.color));
+
+    canvas->AttachBrush(brush);
+    canvas->DrawCircle(Drawing::Point(param.centerXInPx, param.centerYInPy), param.radius);
+    canvas->DetachBrush();
+#endif
     return ResultCode::SUCCESS;
 }
 
