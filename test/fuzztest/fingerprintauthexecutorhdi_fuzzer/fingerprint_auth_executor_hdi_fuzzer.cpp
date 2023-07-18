@@ -209,7 +209,7 @@ private:
     }
 
     Parcel *fuzzParcel_;
-    sptr<ISaCommandCallback> callbackObj_ = nullptr;
+    sptr<ISaCommandCallback> callbackObj_ {nullptr};
 };
 
 class DummyExecuteCallback : public UserAuth::IExecuteCallback {
