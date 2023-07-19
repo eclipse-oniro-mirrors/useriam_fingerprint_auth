@@ -467,6 +467,8 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendComm
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendCommand_003, TestSize.Level0)
 {
     static const std::map<IamPropertyMode, pair<CommandId, IamResultCode>> data = {
+        {IamPropertyMode::PROPERTY_INIT_ALGORITHM,
+            {CommandId::INIT_ALGORITHM, IamResultCode::SUCCESS}},
         {IamPropertyMode::PROPERTY_MODE_FREEZE,
             {CommandId::LOCK_TEMPLATE, IamResultCode::SUCCESS}},
         {IamPropertyMode::PROPERTY_MODE_UNFREEZE,
