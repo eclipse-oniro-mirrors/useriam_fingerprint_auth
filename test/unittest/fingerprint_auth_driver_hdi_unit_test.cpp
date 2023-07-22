@@ -78,7 +78,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_003, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1));
 
@@ -94,7 +94,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_004, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         return static_cast<int32_t>(HDF_FAILURE);
@@ -112,7 +112,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_005, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         return static_cast<int32_t>(HDF_SUCCESS);
@@ -130,7 +130,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_006, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
@@ -151,7 +151,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_007, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         list.push_back(sptr<IExecutor>(nullptr));
@@ -177,7 +177,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorListTest_008, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());
@@ -198,7 +198,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
 
 HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_OnHdiDisconnectTest_001, TestSize.Level0)
 {
-    sptr<MockIFingerprintAuthInterface> interface = new (std::nothrow) MockIFingerprintAuthInterface();
+    sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);
     EXPECT_CALL(*interface, GetExecutorListV1_1(_)).Times(Exactly(1)).WillOnce([](std::vector<sptr<IExecutor>> &list) {
         auto executor = sptr<IExecutor>(new (std::nothrow) MockIExecutor());

@@ -231,7 +231,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_GetExecu
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegisterFinish_001, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
             .WillRepeatedly(
@@ -270,7 +270,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegisterFinish_003, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, OnRegisterFinish(_, _, _))
             .Times(Exactly(1))
@@ -293,7 +293,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Enroll_001, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, Enroll(_, _, _))
             .Times(Exactly(1))
@@ -329,7 +329,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Enroll_0
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Authenticate_001, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, AuthenticateV1_1(_, _, _, _, _))
             .Times(Exactly(1))
@@ -368,7 +368,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Authenti
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_Identify_001, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, Identify(_, _, _))
             .Times(Exactly(1))
@@ -482,7 +482,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendComm
         {static_cast<IamPropertyMode>(CommandId::VENDOR_COMMAND_BEGIN + 1),
             {static_cast<CommandId>(CommandId::VENDOR_COMMAND_BEGIN + 1), IamResultCode::SUCCESS}}};
     for (const auto &pair : data) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         if (pair.second.second == IamResultCode::SUCCESS) {
             EXPECT_CALL(*executorProxy, SendCommand(_, _, _))
@@ -506,7 +506,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendComm
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_SendCommand_004, TestSize.Level0)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
-        auto executorProxy = new (std::nothrow) MockIExecutor();
+        sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, SendCommand(_, _, _))
             .Times(Exactly(1))
@@ -604,7 +604,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnHdiDis
 HWTEST_F(FingerprintAuthExecutorHdiUnitTest,
     FingerprintAuthExecutorHdi_SaCommandCallback_OnSaCommands_001, TestSize.Level0)
 {
-    auto executorProxy = new (std::nothrow) MockIExecutor();
+    sptr<MockIExecutor> executorProxy(new (std::nothrow) MockIExecutor());
     ASSERT_TRUE(executorProxy != nullptr);
     EXPECT_CALL(*executorProxy, OnRegisterFinish(_, _, _))
         .Times(Exactly(1))
