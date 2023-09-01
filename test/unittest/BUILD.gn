@@ -14,6 +14,15 @@
 import("//build/test.gni")
 
 ohos_unittest("FingerprintAuthServiceUnitTest") {
+  sanitize = {
+    integer_overflow = true
+    ubsan = true
+    boundary_sanitize = true
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  stack_protector_ret = true
   module_out_path = "useriam/fingerprint_auth"
 
   sources = [
@@ -48,6 +57,15 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
 }
 
 ohos_unittest("FingerprintSensorIlluminationTest") {
+  sanitize = {
+    integer_overflow = true
+    ubsan = true
+    boundary_sanitize = true
+    cfi = true
+    cfi_cross_dso = true
+    debug = false
+  }
+  stack_protector_ret = true
   module_out_path = "useriam/fingerprint_auth"
 
   sources = [ "fingerprint_auth_sensor_illumination_test.cpp" ]
