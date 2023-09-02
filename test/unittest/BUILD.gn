@@ -21,6 +21,7 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
     cfi = true
     cfi_cross_dso = true
     debug = false
+    blocklist = "../../cfi_blocklist.txt"
   }
   stack_protector_ret = true
   module_out_path = "useriam/fingerprint_auth"
@@ -64,6 +65,7 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
     cfi = true
     cfi_cross_dso = true
     debug = false
+    blocklist = "../../cfi_blocklist.txt"
   }
   stack_protector_ret = true
   module_out_path = "useriam/fingerprint_auth"
