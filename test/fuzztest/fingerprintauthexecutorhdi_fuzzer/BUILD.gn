@@ -32,7 +32,7 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
     "fingerprint_auth_executor_hdi_fuzzer.cpp",
   ]
 
-  deps = ["../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
+  deps = [ "../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
 
   external_deps = [
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
