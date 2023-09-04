@@ -33,7 +33,7 @@ ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
     "fingerprint_auth_service_fuzzer.cpp",
   ]
 
-  deps = [ "../../../services:fingerprintauthservice_source_set" ]
+  deps = ["../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
 
   external_deps = [ "hilog:libhilog" ]
 
