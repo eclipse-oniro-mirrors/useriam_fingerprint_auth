@@ -1,4 +1,4 @@
-# Copyright (c) 2022-2023 Huawei Device Co., Ltd.
+# Copyright (c) 2023 Huawei Device Co., Ltd.
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,31 +14,36 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 
-ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
+ohos_source_set("fingerprintauthservice_source_set_fuzzer") {
   stack_protector_ret = true
-  module_out_path = "useriam/fingerprint_auth"
-  fuzz_config_file = "../fingerprintauthexecutorhdi_fuzzer"
-
-  cflags = [
-    "-g",
-    "-O0",
-    "-Wno-unused-variable",
-    "-fno-omit-frame-pointer",
-  ]
-  include_dirs = [ "../iamfuzz" ]
-
   sources = [
-    "../iamfuzz/iam_fuzz_test.cpp",
-    "fingerprint_auth_executor_hdi_fuzzer.cpp",
+    "../../../services/src/fingerprint_auth_driver_hdi.cpp",
+    "../../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
+    "../../../services/src/fingerprint_auth_executor_hdi.cpp",
+    "../../../services/src/fingerprint_auth_interface_adapter.cpp",
+    "../../../services/src/fingerprint_auth_service.cpp",
+    "../../../services/src/memory_guard.cpp",
+    "../../../services/src/sa_command_manager.cpp",
+    "../../../services/src/sensor_illumination_manager.cpp",
+    "../../../services/src/service_ex_manager.cpp",
   ]
 
-  deps = [ "../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
+  public_configs = [ "../../../services:fingerprintauthservice_config" ]
 
   external_deps = [
+    "c_utils:utils",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
     "hilog:libhilog",
+    "safwk:system_ability_fwk",
+    "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
   ]
+
+  if (use_musl) {
+    if (use_jemalloc && use_jemalloc_dfx_intf) {
+      defines = [ "CONFIG_USE_JEMALLOC_DFX_INTF" ]
+    }
+  }
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 

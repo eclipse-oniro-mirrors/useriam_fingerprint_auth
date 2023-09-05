@@ -15,6 +15,7 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 
 ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
+  stack_protector_ret = true
   module_out_path = "useriam/fingerprint_auth"
   fuzz_config_file = "../fingerprintauthservice_fuzzer"
 
@@ -32,7 +33,7 @@ ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
     "fingerprint_auth_service_fuzzer.cpp",
   ]
 
-  deps = [ "../../../services:fingerprintauthservice_source_set" ]
+  deps = [ "../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
 
   external_deps = [ "hilog:libhilog" ]
 
