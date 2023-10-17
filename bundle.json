@@ -30,6 +30,7 @@
           "graphic_2d",
           "hilog",
           "ipc",
+          "miscdevice",
           "power_manager",
           "safwk",
           "samgr",

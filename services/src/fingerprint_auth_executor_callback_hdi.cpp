@@ -23,6 +23,7 @@
 #include <vector>
 
 #include "hdf_base.h"
+#include "vibrator_agent.h"
 
 #include "iam_check.h"
 #include "iam_executor_iexecute_callback.h"
@@ -36,10 +37,39 @@
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
+namespace {
+    constexpr const char *FINGER_AUTH_EFFECT = "haptic.clock.timer";
+}
+
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
-    std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback)
-    : frameworkCallback_(frameworkCallback)
+    std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType)
+    : frameworkCallback_(frameworkCallback), fingerCallbackHdiType_(fingerCallbackHdiType)
 {
+}
+
+void FingerprintAuthExecutorCallbackHdi::DoVibrator()
+{
+    IAM_LOGI("begin");
+    bool fingerEffectState = false;
+    int32_t ret = Sensors::IsSupportEffect(FINGER_AUTH_EFFECT, &fingerEffectState);
+    if (ret != 0) {
+        IAM_LOGE("call IsSupportEffect fail %{public}d", ret);
+        return;
+    }
+    if (!fingerEffectState) {
+        IAM_LOGE("effect not support");
+        return;
+    }
+    if (!Sensors::SetUsage(USAGE_PHYSICAL_FEEDBACK)) {
+        IAM_LOGE("call SetUsage fail");
+        return;
+    }
+    ret = Sensors::StartVibrator(FINGER_AUTH_EFFECT);
+    if (ret != 0) {
+        IAM_LOGE("call StartVibrator fail %{public}d", ret);
+        return;
+    }
+    IAM_LOGI("end");
 }
 
 int32_t FingerprintAuthExecutorCallbackHdi::OnResult(int32_t result, const std::vector<uint8_t> &extraInfo)
@@ -47,6 +77,9 @@ int32_t FingerprintAuthExecutorCallbackHdi::OnResult(int32_t result, const std::
     IAM_LOGI("OnResult %{public}d", result);
     UserAuth::ResultCode retCode = ConvertResultCode(result);
     IF_FALSE_LOGE_AND_RETURN_VAL(frameworkCallback_ != nullptr, HDF_FAILURE);
+    if ((fingerCallbackHdiType_ == FINGER_CALLBACK_AUTH) && (retCode == UserAuth::FAIL)) {
+        DoVibrator();
+    }
     frameworkCallback_->OnResult(retCode, extraInfo);
     return HDF_SUCCESS;
 }

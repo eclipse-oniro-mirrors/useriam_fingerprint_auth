@@ -29,18 +29,30 @@ namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
+
+enum FingerCallbackHdiType : int32_t {
+    FINGER_CALLBACK_ENROLL = 0,
+    FINGER_CALLBACK_AUTH = 1,
+    FINGER_CALLBACK_IDENTIFY = 2,
+    FINGER_CALLBACK_COMMAND = 3,
+    FINGER_CALLBACK_INVALID = 4,
+};
+
 class FingerprintAuthExecutorCallbackHdi : public IExecutorCallback, public NoCopyable {
 public:
-    explicit FingerprintAuthExecutorCallbackHdi(std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback);
+    FingerprintAuthExecutorCallbackHdi(
+        std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType);
     ~FingerprintAuthExecutorCallbackHdi() override = default;
 
     int32_t OnResult(int32_t result, const std::vector<uint8_t> &extraInfo) override;
     int32_t OnTip(int32_t tip, const std::vector<uint8_t> &extraInfo) override;
 
 private:
+    void DoVibrator();
     UserIam::UserAuth::ResultCode ConvertResultCode(const int32_t in);
 
     std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback_;
+    FingerCallbackHdiType fingerCallbackHdiType_ = FINGER_CALLBACK_INVALID;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam
