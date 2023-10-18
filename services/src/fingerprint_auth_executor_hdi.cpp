@@ -90,7 +90,8 @@ IamResultCode FingerprintAuthExecutorHdi::Enroll(uint64_t scheduleId, const User
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(callbackObj != nullptr, IamResultCode::GENERAL_ERROR);
-    sptr<IExecutorCallback> callback(new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj));
+    sptr<IExecutorCallback> callback(
+        new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj, FINGER_CALLBACK_ENROLL));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->Enroll(scheduleId, param.extraInfo, callback);
     IamResultCode result = ConvertResultCode(status);
@@ -106,7 +107,8 @@ IamResultCode FingerprintAuthExecutorHdi::Authenticate(uint64_t scheduleId, cons
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(callbackObj != nullptr, IamResultCode::GENERAL_ERROR);
-    sptr<IExecutorCallback> callback(new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj));
+    sptr<IExecutorCallback> callback(
+        new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj, FINGER_CALLBACK_AUTH));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->AuthenticateV1_1(scheduleId, param.templateIdList, param.endAfterFirstFail,
         param.extraInfo, callback);
@@ -123,7 +125,8 @@ IamResultCode FingerprintAuthExecutorHdi::Identify(uint64_t scheduleId, const Us
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(callbackObj != nullptr, IamResultCode::GENERAL_ERROR);
-    sptr<IExecutorCallback> callback(new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj));
+    sptr<IExecutorCallback> callback(
+        new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj, FINGER_CALLBACK_IDENTIFY));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->Identify(scheduleId, param.extraInfo, callback);
     IamResultCode result = ConvertResultCode(status);
@@ -169,7 +172,8 @@ IamResultCode FingerprintAuthExecutorHdi::SendCommand(UserAuth::PropertyMode com
         IAM_LOGE("ConvertCommandId fail result %{public}d", result);
         return result;
     }
-    sptr<IExecutorCallback> callback(new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj));
+    sptr<IExecutorCallback> callback(
+        new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj, FINGER_CALLBACK_COMMAND));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->SendCommand(hdiCommandId, extraInfo, callback);
     result = ConvertResultCode(status);
