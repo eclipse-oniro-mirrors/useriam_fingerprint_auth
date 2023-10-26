@@ -38,7 +38,7 @@ namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace {
-    constexpr const char *FINGER_AUTH_EFFECT = "haptic.clock.timer";
+    constexpr const char *FINGER_AUTH_EFFECT = "haptic.fail";
 }
 
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
