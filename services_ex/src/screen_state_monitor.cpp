@@ -103,7 +103,6 @@ void EventSubscriber::OnReceiveEvent(const CommonEventData &eventData)
 {
     const Want &want = eventData.GetWant();
     std::string action = want.GetAction();
-
     if (action != CommonEventSupport::COMMON_EVENT_SCREEN_ON && action != CommonEventSupport::COMMON_EVENT_SCREEN_OFF) {
         return;
     }
