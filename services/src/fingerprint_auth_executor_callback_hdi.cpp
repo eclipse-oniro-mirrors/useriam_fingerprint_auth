@@ -37,9 +37,6 @@
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-namespace {
-    constexpr const char *FINGER_AUTH_EFFECT = "haptic.fail";
-}
 
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
     std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType)
@@ -50,8 +47,9 @@ FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
 void FingerprintAuthExecutorCallbackHdi::DoVibrator()
 {
     IAM_LOGI("begin");
+    static const char *fingerAuthEffect = "haptic.fail";
     bool fingerEffectState = false;
-    int32_t ret = Sensors::IsSupportEffect(FINGER_AUTH_EFFECT, &fingerEffectState);
+    int32_t ret = Sensors::IsSupportEffect(fingerAuthEffect, &fingerEffectState);
     if (ret != 0) {
         IAM_LOGE("call IsSupportEffect fail %{public}d", ret);
         return;
@@ -64,7 +62,7 @@ void FingerprintAuthExecutorCallbackHdi::DoVibrator()
         IAM_LOGE("call SetUsage fail");
         return;
     }
-    ret = Sensors::StartVibrator(FINGER_AUTH_EFFECT);
+    ret = Sensors::StartVibrator(fingerAuthEffect);
     if (ret != 0) {
         IAM_LOGE("call StartVibrator fail %{public}d", ret);
         return;
