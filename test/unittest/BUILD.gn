@@ -23,7 +23,7 @@ ohos_unittest("FingerprintAuthServiceUnitTest") {
     debug = false
     blocklist = "../../cfi_blocklist.txt"
   }
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   module_out_path = "useriam/fingerprint_auth"
 
   sources = [
@@ -67,7 +67,7 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
     debug = false
     blocklist = "../../cfi_blocklist.txt"
   }
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   module_out_path = "useriam/fingerprint_auth"
 
   sources = [ "fingerprint_auth_sensor_illumination_test.cpp" ]

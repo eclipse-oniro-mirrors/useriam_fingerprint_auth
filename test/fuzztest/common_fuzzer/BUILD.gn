@@ -15,7 +15,7 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 
 ohos_source_set("fingerprintauthservice_source_set_fuzzer") {
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   sources = [
     "../../../services/src/fingerprint_auth_driver_hdi.cpp",
     "../../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
