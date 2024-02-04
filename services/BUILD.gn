@@ -31,7 +31,7 @@ ohos_source_set("fingerprintauthservice_source_set") {
     cfi_cross_dso = true
     debug = false
   }
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   sources = [
     "src/fingerprint_auth_driver_hdi.cpp",
     "src/fingerprint_auth_executor_callback_hdi.cpp",
@@ -77,7 +77,7 @@ ohos_shared_library("fingerprintauthservice") {
     cfi_cross_dso = true
     debug = false
   }
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   deps = [ ":fingerprintauthservice_source_set" ]
 
   if (use_musl) {

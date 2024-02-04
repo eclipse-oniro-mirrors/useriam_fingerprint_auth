@@ -15,7 +15,7 @@ import("//build/config/features.gni")
 import("//build/test.gni")
 
 ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
-  stack_protector_ret = true
+  branch_protector_ret = "pac_ret"
   module_out_path = "fingerprint_auth/fingerprint_auth"
   fuzz_config_file = "../fingerprintauthexecutorhdi_fuzzer"
 
