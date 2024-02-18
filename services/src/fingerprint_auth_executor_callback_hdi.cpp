@@ -26,10 +26,12 @@
 #include "vibrator_agent.h"
 
 #include "iam_check.h"
+#include "iam_common_defines.h"
 #include "iam_executor_iexecute_callback.h"
 #include "iam_logger.h"
 
 #include "fingerprint_auth_defines.h"
+#include "fingerprint_auth_hdi.h"
 #include "sa_command_manager.h"
 
 #define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
@@ -37,7 +39,6 @@
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
     std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType)
     : frameworkCallback_(frameworkCallback), fingerCallbackHdiType_(fingerCallbackHdiType)
@@ -86,6 +87,9 @@ int32_t FingerprintAuthExecutorCallbackHdi::OnTip(int32_t tip, const std::vector
 {
     IAM_LOGI("OnTip %{public}d", tip);
     IF_FALSE_LOGE_AND_RETURN_VAL(frameworkCallback_ != nullptr, HDF_FAILURE);
+    if (tip == HDI::FingerprintAuth::V1_2::FINGERPRINT_AUTH_TIP_SINGLE_AUTH_RESULT) {
+        tip = UserAuth::USER_AUTH_TIP_SINGLE_AUTH_RESULT;
+    }
     frameworkCallback_->OnAcquireInfo(tip, extraInfo);
     return HDF_SUCCESS;
 }
