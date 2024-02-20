@@ -35,7 +35,7 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
   deps = [ "../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
 
   external_deps = [
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.1",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.2",
     "hilog:libhilog",
     "user_auth_framework:userauth_executors",
   ]

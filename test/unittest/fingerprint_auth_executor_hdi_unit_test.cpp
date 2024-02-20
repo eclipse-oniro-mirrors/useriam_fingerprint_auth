@@ -235,7 +235,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
         ASSERT_TRUE(executorProxy != nullptr);
         EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
             .WillRepeatedly(
-                [](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback>& callbackObj) {
+                [](const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback>& callbackObj) {
                     return HDF_SUCCESS;
                 }
             );
@@ -248,7 +248,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
         if (pair.first == HDF_SUCCESS) {
             EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
                 .Times(Exactly(1))
-                .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+                .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback> &callbackObj) {
                     return HDF_SUCCESS;
                 });
         }
@@ -279,7 +279,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest, FingerprintAuthExecutorHdi_OnRegist
                     const std::vector<uint8_t> &extraInfo) { return HDF_SUCCESS; });
         EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
             .Times(Exactly(1))
-            .WillOnce([&pair](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+            .WillOnce([&pair](const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback> &callbackObj) {
                 return pair.first;
             });
         auto executorHdi = MakeShared<FingerprintAuthExecutorHdi>(executorProxy);
@@ -613,7 +613,7 @@ HWTEST_F(FingerprintAuthExecutorHdiUnitTest,
                 const std::vector<uint8_t> &extraInfo) { return HDF_SUCCESS; });
     EXPECT_CALL(*executorProxy, RegisterSaCommandCallback(_))
         .Times(Exactly(1))
-        .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback> &callbackObj) {
+        .WillOnce([](const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback> &callbackObj) {
             std::vector<SaCommand> commands;
             callbackObj->OnSaCommands(commands);
             return HDF_SUCCESS;

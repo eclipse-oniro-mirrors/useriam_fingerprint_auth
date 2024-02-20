@@ -52,7 +52,7 @@ public:
          const std::vector<GetPropertyType>& propertyTypes, Property& property));
     MOCK_METHOD1(SetCachedTemplates, int32_t(const std::vector<uint64_t>& templateIdList));
     MOCK_METHOD1(RegisterSaCommandCallback,
-        int32_t(const sptr<OHOS::HDI::FingerprintAuth::V1_1::ISaCommandCallback>& callbackObj));
+        int32_t(const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback>& callbackObj));
 };
 } // namespace FingerprintAuth
 } // namespace UserIam
