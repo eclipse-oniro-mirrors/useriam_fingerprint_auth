@@ -23,7 +23,7 @@
 #include "mock_iexecutor.h"
 #include "mock_ifingerprint_auth_interface.h"
 
-#define LOG_LABEL OHOS::UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+#define LOG_TAG "FINGERPRINT_AUTH_SA"
 
 using namespace testing;
 using namespace testing::ext;
