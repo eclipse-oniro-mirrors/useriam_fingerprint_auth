@@ -30,7 +30,7 @@
 #include "fingerprint_auth_hdi.h"
 #include "fingerprint_auth_interface_adapter.h"
 
-#define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+#define LOG_TAG "FINGERPRINT_AUTH_SA"
 using namespace OHOS::HDI::FingerprintAuth::V1_0;
 
 namespace OHOS {

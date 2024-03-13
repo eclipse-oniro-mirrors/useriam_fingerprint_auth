@@ -36,7 +36,7 @@
 #include "fingerprint_auth_hdi.h"
 #include "sa_command_manager.h"
 
-#define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+#define LOG_TAG "FINGERPRINT_AUTH_SA"
 
 namespace OHOS {
 namespace UserIam {

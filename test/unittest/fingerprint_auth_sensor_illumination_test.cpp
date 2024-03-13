@@ -21,7 +21,7 @@
 #include "sensor_illumination_manager.h"
 #include "service_ex_manager.h"
 
-#define LOG_LABEL UserIam::Common::LABEL_FINGERPRINT_AUTH_SA
+#define LOG_TAG "FINGERPRINT_AUTH_SA"
 
 using namespace testing;
 using namespace testing::ext;
