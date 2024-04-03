@@ -17,9 +17,9 @@ import("//build/test.gni")
 ohos_source_set("fingerprintauthservice_source_set_fuzzer") {
   branch_protector_ret = "pac_ret"
   sources = [
+    "../../../services/src/fingerprint_auth_all_in_one_executor_hdi.cpp",
     "../../../services/src/fingerprint_auth_driver_hdi.cpp",
     "../../../services/src/fingerprint_auth_executor_callback_hdi.cpp",
-    "../../../services/src/fingerprint_auth_executor_hdi.cpp",
     "../../../services/src/fingerprint_auth_interface_adapter.cpp",
     "../../../services/src/fingerprint_auth_service.cpp",
     "../../../services/src/memory_guard.cpp",
@@ -32,7 +32,7 @@ ohos_source_set("fingerprintauthservice_source_set_fuzzer") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.2",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "hilog:libhilog",
     "miscdevice:vibrator_interface_native",
     "safwk:system_ability_fwk",

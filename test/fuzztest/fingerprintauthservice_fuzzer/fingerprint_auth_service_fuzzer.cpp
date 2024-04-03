@@ -55,7 +55,7 @@ void FuzzOnStop(Parcel &parcel)
 }
 
 using FuzzFunc = decltype(FuzzOnStart);
-FuzzFunc *g_fuzzFuncs[] = {FuzzOnStart, FuzzOnStop};
+FuzzFunc *g_fuzzFuncs[] = { FuzzOnStart, FuzzOnStop };
 
 void FingerprintAuthServiceFuzzTest(const uint8_t *data, size_t size)
 {

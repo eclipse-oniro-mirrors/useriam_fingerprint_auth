@@ -27,9 +27,9 @@ class MockISaCommandProcessor : public ISaCommandProcessor {
 public:
     virtual ~MockISaCommandProcessor() = default;
 
-    MOCK_METHOD2(ProcessSaCommand, UserAuth::ResultCode(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
-        const SaCommand &command));
-    MOCK_METHOD1(OnHdiDisconnect, void(std::shared_ptr<FingerprintAuthExecutorHdi> executor));
+    MOCK_METHOD2(ProcessSaCommand,
+        UserAuth::ResultCode(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommand &command));
+    MOCK_METHOD1(OnHdiDisconnect, void(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor));
 };
 } // namespace FingerprintAuth
 } // namespace UserIam

@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef FINGERPRINT_AUTH_EXECUTOR_HDI_H
-#define FINGERPRINT_AUTH_EXECUTOR_HDI_H
+#ifndef FINGERPRINT_AUTH_ALL_IN_ONE_EXECUTOR_HDI_H
+#define FINGERPRINT_AUTH_ALL_IN_ONE_EXECUTOR_HDI_H
 
 #include <cstdint>
 #include <map>
@@ -31,12 +31,12 @@ namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
-class FingerprintAuthExecutorHdi : public std::enable_shared_from_this<FingerprintAuthExecutorHdi>,
-                                   public UserAuth::IAuthExecutorHdi,
-                                   public NoCopyable {
+class FingerprintAllInOneExecutorHdi : public std::enable_shared_from_this<FingerprintAllInOneExecutorHdi>,
+                                       public UserAuth::IAuthExecutorHdi,
+                                       public NoCopyable {
 public:
-    explicit FingerprintAuthExecutorHdi(sptr<IExecutor> executorProxy);
-    ~FingerprintAuthExecutorHdi() override = default;
+    explicit FingerprintAllInOneExecutorHdi(sptr<IAllInOneExecutor> executorProxy);
+    ~FingerprintAllInOneExecutorHdi() override = default;
 
     UserAuth::ResultCode GetExecutorInfo(UserAuth::ExecutorInfo &info) override;
     UserAuth::ResultCode OnRegisterFinish(const std::vector<uint64_t> &templateIdList,
@@ -60,34 +60,33 @@ private:
     class SaCommandCallback;
 
     UserAuth::ResultCode MoveHdiExecutorInfo(ExecutorInfo &in, UserAuth::ExecutorInfo &out);
-    void MoveHdiTemplateInfo(TemplateInfo &in, UserAuth::TemplateInfo &out);
     void MoveHdiProperty(Property &in, UserAuth::Property &out);
-    UserAuth::ResultCode ConvertCommandId(const UserAuth::PropertyMode in, CommandId &out);
-    UserAuth::ResultCode ConvertAuthType(const AuthType in, UserAuth::AuthType &out);
-    UserAuth::ResultCode ConvertExecutorRole(const ExecutorRole in, UserAuth::ExecutorRole &out);
-    UserAuth::ResultCode ConvertExecutorSecureLevel(const ExecutorSecureLevel in, UserAuth::ExecutorSecureLevel &out);
+    UserAuth::ResultCode ConvertCommandId(const UserAuth::PropertyMode in, int32_t &out);
+    UserAuth::ResultCode ConvertAuthType(const int32_t in, UserAuth::AuthType &out);
+    UserAuth::ResultCode ConvertExecutorRole(const int32_t in, UserAuth::ExecutorRole &out);
+    UserAuth::ResultCode ConvertExecutorSecureLevel(const int32_t in, UserAuth::ExecutorSecureLevel &out);
     UserAuth::ResultCode ConvertResultCode(const int32_t in);
-    UserAuth::ResultCode ConvertAttributeKeyToPropertyType(const UserAuth::Attributes::AttributeKey in,
-        GetPropertyType &out);
+    UserAuth::ResultCode ConvertAttributeKeyToPropertyType(const UserAuth::Attributes::AttributeKey in, int32_t &out);
     UserAuth::ResultCode ConvertAttributeKeyVectorToPropertyType(
-        const std::vector<UserAuth::Attributes::AttributeKey> inVector, std::vector<GetPropertyType> &outVector);
+        const std::vector<UserAuth::Attributes::AttributeKey> inVector, std::vector<int32_t> &outVector);
     UserAuth::ResultCode RegisterSaCommandCallback();
 
-    sptr<IExecutor> executorProxy_;
+    sptr<IAllInOneExecutor> executorProxy_;
     sptr<SaCommandCallback> saCommandCallback_;
 };
 
-class FingerprintAuthExecutorHdi::SaCommandCallback : public ISaCommandCallback, public NoCopyable {
+class FingerprintAllInOneExecutorHdi::SaCommandCallback : public ISaCommandCallback, public NoCopyable {
 public:
-    explicit SaCommandCallback(std::shared_ptr<FingerprintAuthExecutorHdi> executorHdi) : executorHdi_(executorHdi) {};
+    explicit SaCommandCallback(std::shared_ptr<FingerprintAllInOneExecutorHdi> executorHdi)
+        : executorHdi_(executorHdi) {};
     ~SaCommandCallback() override {};
     int32_t OnSaCommands(const std::vector<SaCommand> &commands) override;
 
 private:
-    std::shared_ptr<FingerprintAuthExecutorHdi> executorHdi_;
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executorHdi_;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam
 } // namespace OHOS
 
-#endif // FINGERPRINT_AUTH_EXECUTOR_HDI_H
+#endif // FINGERPRINT_AUTH_ALL_IN_ONE_EXECUTOR_HDI_H

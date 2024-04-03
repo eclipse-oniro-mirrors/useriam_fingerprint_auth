@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 
 #include <cstdint>
 #include <functional>
@@ -45,10 +45,10 @@ using IamResultCode = UserAuth::ResultCode;
 using IamExecutorRole = UserAuth::ExecutorRole;
 using IamExecutorInfo = UserAuth::ExecutorInfo;
 namespace UserAuth = OHOS::UserIam::UserAuth;
-FingerprintAuthExecutorHdi::FingerprintAuthExecutorHdi(sptr<IExecutor> executorProxy)
+FingerprintAllInOneExecutorHdi::FingerprintAllInOneExecutorHdi(sptr<IAllInOneExecutor> executorProxy)
     : executorProxy_(executorProxy) {};
 
-IamResultCode FingerprintAuthExecutorHdi::GetExecutorInfo(IamExecutorInfo &info)
+IamResultCode FingerprintAllInOneExecutorHdi::GetExecutorInfo(IamExecutorInfo &info)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     ExecutorInfo localInfo = {};
@@ -66,7 +66,7 @@ IamResultCode FingerprintAuthExecutorHdi::GetExecutorInfo(IamExecutorInfo &info)
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::OnRegisterFinish(const std::vector<uint64_t> &templateIdList,
+IamResultCode FingerprintAllInOneExecutorHdi::OnRegisterFinish(const std::vector<uint64_t> &templateIdList,
     const std::vector<uint8_t> &frameworkPublicKey, const std::vector<uint8_t> &extraInfo)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
@@ -85,7 +85,7 @@ IamResultCode FingerprintAuthExecutorHdi::OnRegisterFinish(const std::vector<uin
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::Enroll(uint64_t scheduleId, const UserAuth::EnrollParam &param,
+IamResultCode FingerprintAllInOneExecutorHdi::Enroll(uint64_t scheduleId, const UserAuth::EnrollParam &param,
     const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
@@ -102,15 +102,15 @@ IamResultCode FingerprintAuthExecutorHdi::Enroll(uint64_t scheduleId, const User
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::Authenticate(uint64_t scheduleId, const UserAuth::AuthenticateParam &param,
-    const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
+IamResultCode FingerprintAllInOneExecutorHdi::Authenticate(uint64_t scheduleId,
+    const UserAuth::AuthenticateParam &param, const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(callbackObj != nullptr, IamResultCode::GENERAL_ERROR);
     sptr<IExecutorCallback> callback(
         new (std::nothrow) FingerprintAuthExecutorCallbackHdi(callbackObj, FINGER_CALLBACK_AUTH));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
-    int32_t status = executorProxy_->AuthenticateV1_1(scheduleId, param.templateIdList, param.endAfterFirstFail,
+    int32_t status = executorProxy_->Authenticate(scheduleId, param.templateIdList, param.endAfterFirstFail,
         param.extraInfo, callback);
     IamResultCode result = ConvertResultCode(status);
     if (result != IamResultCode::SUCCESS) {
@@ -120,7 +120,7 @@ IamResultCode FingerprintAuthExecutorHdi::Authenticate(uint64_t scheduleId, cons
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::Identify(uint64_t scheduleId, const UserAuth::IdentifyParam &param,
+IamResultCode FingerprintAllInOneExecutorHdi::Identify(uint64_t scheduleId, const UserAuth::IdentifyParam &param,
     const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
@@ -137,7 +137,7 @@ IamResultCode FingerprintAuthExecutorHdi::Identify(uint64_t scheduleId, const Us
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::Delete(const std::vector<uint64_t> &templateIdList)
+IamResultCode FingerprintAllInOneExecutorHdi::Delete(const std::vector<uint64_t> &templateIdList)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->Delete(templateIdList);
@@ -149,7 +149,7 @@ IamResultCode FingerprintAuthExecutorHdi::Delete(const std::vector<uint64_t> &te
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::Cancel(uint64_t scheduleId)
+IamResultCode FingerprintAllInOneExecutorHdi::Cancel(uint64_t scheduleId)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     int32_t status = executorProxy_->Cancel(scheduleId);
@@ -161,12 +161,12 @@ IamResultCode FingerprintAuthExecutorHdi::Cancel(uint64_t scheduleId)
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::SendCommand(UserAuth::PropertyMode commandId,
+IamResultCode FingerprintAllInOneExecutorHdi::SendCommand(UserAuth::PropertyMode commandId,
     const std::vector<uint8_t> &extraInfo, const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(callbackObj != nullptr, IamResultCode::GENERAL_ERROR);
-    CommandId hdiCommandId;
+    int32_t hdiCommandId;
     IamResultCode result = ConvertCommandId(commandId, hdiCommandId);
     if (result != IamResultCode::SUCCESS) {
         IAM_LOGE("ConvertCommandId fail result %{public}d", result);
@@ -184,12 +184,12 @@ IamResultCode FingerprintAuthExecutorHdi::SendCommand(UserAuth::PropertyMode com
     return IamResultCode::SUCCESS;
 }
 
-UserAuth::ResultCode FingerprintAuthExecutorHdi::GetProperty(const std::vector<uint64_t> &templateIdList,
+UserAuth::ResultCode FingerprintAllInOneExecutorHdi::GetProperty(const std::vector<uint64_t> &templateIdList,
     const std::vector<UserAuth::Attributes::AttributeKey> &keys, UserAuth::Property &property)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
 
-    std::vector<GetPropertyType> propertyTypes;
+    std::vector<int32_t> propertyTypes;
     IamResultCode result = ConvertAttributeKeyVectorToPropertyType(keys, propertyTypes);
     IF_FALSE_LOGE_AND_RETURN_VAL(result == IamResultCode::SUCCESS, IamResultCode::GENERAL_ERROR);
 
@@ -204,7 +204,7 @@ UserAuth::ResultCode FingerprintAuthExecutorHdi::GetProperty(const std::vector<u
     return IamResultCode::SUCCESS;
 }
 
-UserAuth::ResultCode FingerprintAuthExecutorHdi::SetCachedTemplates(const std::vector<uint64_t> &templateIdList)
+UserAuth::ResultCode FingerprintAllInOneExecutorHdi::SetCachedTemplates(const std::vector<uint64_t> &templateIdList)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
 
@@ -217,16 +217,16 @@ UserAuth::ResultCode FingerprintAuthExecutorHdi::SetCachedTemplates(const std::v
     return IamResultCode::SUCCESS;
 }
 
-void FingerprintAuthExecutorHdi::OnHdiDisconnect()
+void FingerprintAllInOneExecutorHdi::OnHdiDisconnect()
 {
     IAM_LOGE("start");
     SaCommandManager::GetInstance().OnHdiDisconnect(shared_from_this());
 }
 
-IamResultCode FingerprintAuthExecutorHdi::MoveHdiExecutorInfo(ExecutorInfo &in, IamExecutorInfo &out)
+IamResultCode FingerprintAllInOneExecutorHdi::MoveHdiExecutorInfo(ExecutorInfo &in, IamExecutorInfo &out)
 {
     out.executorSensorHint = static_cast<uint32_t>(in.sensorId);
-    out.executorMatcher = in.executorType;
+    out.executorMatcher = in.executorMatcher;
     IamResultCode result = ConvertExecutorRole(in.executorRole, out.executorRole);
     if (result != IamResultCode::SUCCESS) {
         IAM_LOGE("ConvertExecutorRole fail result %{public}d", result);
@@ -246,7 +246,7 @@ IamResultCode FingerprintAuthExecutorHdi::MoveHdiExecutorInfo(ExecutorInfo &in, 
     return IamResultCode::SUCCESS;
 }
 
-void FingerprintAuthExecutorHdi::MoveHdiProperty(Property &in, UserAuth::Property &out)
+void FingerprintAllInOneExecutorHdi::MoveHdiProperty(Property &in, UserAuth::Property &out)
 {
     out.authSubType = in.authSubType;
     out.lockoutDuration = in.lockoutDuration;
@@ -255,42 +255,34 @@ void FingerprintAuthExecutorHdi::MoveHdiProperty(Property &in, UserAuth::Propert
     out.sensorInfo.swap(in.sensorInfo);
 }
 
-void FingerprintAuthExecutorHdi::MoveHdiTemplateInfo(TemplateInfo &in, UserAuth::TemplateInfo &out)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertCommandId(const UserAuth::PropertyMode in, int32_t &out)
 {
-    out.executorType = in.executorType;
-    out.freezingTime = in.lockoutDuration;
-    out.remainTimes = in.remainAttempts;
-    in.extraInfo.swap(out.extraInfo);
-}
-
-IamResultCode FingerprintAuthExecutorHdi::ConvertCommandId(const UserAuth::PropertyMode in, CommandId &out)
-{
-    if (static_cast<CommandId>(in) > CommandId::VENDOR_COMMAND_BEGIN) {
-        out = static_cast<CommandId>(in);
+    if (static_cast<DriverCommandId>(in) > DriverCommandId::VENDOR_COMMAND_BEGIN) {
+        out = static_cast<DriverCommandId>(in);
         IAM_LOGI("vendor command id %{public}d, no covert", out);
         return IamResultCode::SUCCESS;
     }
 
-    static const std::map<UserAuth::PropertyMode, CommandId> data = {
-        { UserAuth::PropertyMode::PROPERTY_INIT_ALGORITHM, CommandId::INIT_ALGORITHM },
-        { UserAuth::PropertyMode::PROPERTY_MODE_FREEZE, CommandId::LOCK_TEMPLATE },
-        { UserAuth::PropertyMode::PROPERTY_MODE_UNFREEZE, CommandId::UNLOCK_TEMPLATE } };
+    static const std::map<UserAuth::PropertyMode, DriverCommandId> data = {
+        { UserAuth::PropertyMode::PROPERTY_INIT_ALGORITHM, DriverCommandId::INIT_ALGORITHM },
+        { UserAuth::PropertyMode::PROPERTY_MODE_FREEZE, DriverCommandId::LOCK_TEMPLATE },
+        { UserAuth::PropertyMode::PROPERTY_MODE_UNFREEZE, DriverCommandId::UNLOCK_TEMPLATE } };
     auto iter = data.find(in);
     if (iter == data.end()) {
         IAM_LOGE("command id %{public}d is invalid", in);
         return IamResultCode::INVALID_PARAMETERS;
     }
-    out = iter->second;
+    out = static_cast<int32_t>(iter->second);
     IAM_LOGI("covert command id %{public}d to idl command is %{public}d", in, out);
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertAuthType(const AuthType in, UserAuth::AuthType &out)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertAuthType(const int32_t in, UserAuth::AuthType &out)
 {
     static const std::map<AuthType, UserAuth::AuthType> data = {
         { AuthType::FINGERPRINT, UserAuth::AuthType::FINGERPRINT },
     };
-    auto iter = data.find(in);
+    auto iter = data.find(static_cast<AuthType>(in));
     if (iter == data.end()) {
         IAM_LOGE("authType %{public}d is invalid", in);
         return IamResultCode::GENERAL_ERROR;
@@ -299,14 +291,14 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertAuthType(const AuthType in, Use
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertExecutorRole(const ExecutorRole in, IamExecutorRole &out)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertExecutorRole(const int32_t in, IamExecutorRole &out)
 {
     static const std::map<ExecutorRole, IamExecutorRole> data = {
         { ExecutorRole::COLLECTOR, IamExecutorRole::COLLECTOR },
         { ExecutorRole::VERIFIER, IamExecutorRole::VERIFIER },
         { ExecutorRole::ALL_IN_ONE, IamExecutorRole::ALL_IN_ONE },
     };
-    auto iter = data.find(in);
+    auto iter = data.find(static_cast<ExecutorRole>(in));
     if (iter == data.end()) {
         IAM_LOGE("executorRole %{public}d is invalid", in);
         return IamResultCode::GENERAL_ERROR;
@@ -315,7 +307,7 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertExecutorRole(const ExecutorRole
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertExecutorSecureLevel(const ExecutorSecureLevel in,
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertExecutorSecureLevel(const int32_t in,
     UserAuth::ExecutorSecureLevel &out)
 {
     static const std::map<ExecutorSecureLevel, UserAuth::ExecutorSecureLevel> data = {
@@ -324,7 +316,7 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertExecutorSecureLevel(const Execu
         { ExecutorSecureLevel::ESL2, UserAuth::ExecutorSecureLevel::ESL2 },
         { ExecutorSecureLevel::ESL3, UserAuth::ExecutorSecureLevel::ESL3 },
     };
-    auto iter = data.find(in);
+    auto iter = data.find(static_cast<ExecutorSecureLevel>(in));
     if (iter == data.end()) {
         IAM_LOGE("executorSecureLevel %{public}d is invalid", in);
         return IamResultCode::GENERAL_ERROR;
@@ -333,7 +325,7 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertExecutorSecureLevel(const Execu
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertResultCode(const int32_t in)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertResultCode(const int32_t in)
 {
     HDF_STATUS hdfIn = static_cast<HDF_STATUS>(in);
     static const std::map<HDF_STATUS, IamResultCode> data = {
@@ -355,12 +347,12 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertResultCode(const int32_t in)
     return out;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertAttributeKeyVectorToPropertyType(
-    const std::vector<UserAuth::Attributes::AttributeKey> inItems, std::vector<GetPropertyType> &outItems)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertAttributeKeyVectorToPropertyType(
+    const std::vector<UserAuth::Attributes::AttributeKey> inItems, std::vector<int32_t> &outItems)
 {
     outItems.clear();
     for (auto &inItem : inItems) {
-        GetPropertyType outItem;
+        int32_t outItem;
         IamResultCode result = ConvertAttributeKeyToPropertyType(inItem, outItem);
         IF_FALSE_LOGE_AND_RETURN_VAL(result == IamResultCode::SUCCESS, IamResultCode::GENERAL_ERROR);
         outItems.push_back(outItem);
@@ -369,8 +361,8 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertAttributeKeyVectorToPropertyTyp
     return IamResultCode::SUCCESS;
 }
 
-IamResultCode FingerprintAuthExecutorHdi::ConvertAttributeKeyToPropertyType(const UserAuth::Attributes::AttributeKey in,
-    GetPropertyType &out)
+IamResultCode FingerprintAllInOneExecutorHdi::ConvertAttributeKeyToPropertyType(
+    const UserAuth::Attributes::AttributeKey in, int32_t &out)
 {
     static const std::map<UserAuth::Attributes::AttributeKey, GetPropertyType> data = {
         { UserAuth::Attributes::ATTR_PIN_SUB_TYPE, GetPropertyType::AUTH_SUB_TYPE },
@@ -385,14 +377,16 @@ IamResultCode FingerprintAuthExecutorHdi::ConvertAttributeKeyToPropertyType(cons
         IAM_LOGE("attribute %{public}d is invalid", in);
         return IamResultCode::GENERAL_ERROR;
     } else {
-        out = iter->second;
+        out = static_cast<int32_t>(iter->second);
     }
     IAM_LOGI("covert hdi result code %{public}d to framework result code %{public}d", in, out);
     return IamResultCode::SUCCESS;
 }
 
-UserAuth::ResultCode FingerprintAuthExecutorHdi::RegisterSaCommandCallback()
+UserAuth::ResultCode FingerprintAllInOneExecutorHdi::RegisterSaCommandCallback()
 {
+    IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
+
     sptr<SaCommandCallback> callback(new (std::nothrow) SaCommandCallback(shared_from_this()));
     IF_FALSE_LOGE_AND_RETURN_VAL(callback != nullptr, IamResultCode::GENERAL_ERROR);
 
@@ -406,7 +400,7 @@ UserAuth::ResultCode FingerprintAuthExecutorHdi::RegisterSaCommandCallback()
     return IamResultCode::SUCCESS;
 }
 
-int32_t FingerprintAuthExecutorHdi::SaCommandCallback::OnSaCommands(const std::vector<SaCommand> &commands)
+int32_t FingerprintAllInOneExecutorHdi::SaCommandCallback::OnSaCommands(const std::vector<SaCommand> &commands)
 {
     IAM_LOGI("start");
     MemoryGuard guard;

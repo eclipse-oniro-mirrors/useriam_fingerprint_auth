@@ -92,17 +92,15 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
 
 HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_002, TestSize.Level0)
 {
-    SaCommand enableCommand = {
-        .id = SaCommandId::ENABLE_SENSOR_ILLUMINATION,
-        .param = { .enableSensorIllumination = { 500, 500, 200, 0, WHITE } }
-    };
+    SaCommand enableCommand = { .id = SaCommandId::ENABLE_SENSOR_ILLUMINATION,
+        .param = { .enableSensorIllumination = { 500, 500, 200, 0, WHITE } } };
     SaCommand disableCommand = { SaCommandId::DISABLE_SENSOR_ILLUMINATION };
     SaCommand turnOnCommand = { SaCommandId::TURN_ON_SENSOR_ILLUMINATION };
     SaCommand turnOffCommand = { SaCommandId::TURN_OFF_SENSOR_ILLUMINATION };
 
     auto manager = SensorIlluminationManager::GetInstance();
     EXPECT_TRUE(manager != nullptr);
-    auto executor = Common::MakeShared<FingerprintAuthExecutorHdi>(nullptr);
+    auto executor = Common::MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     EXPECT_TRUE(executor != nullptr);
 
     IAM_LOGI("Begin EnableSensorIllumination");

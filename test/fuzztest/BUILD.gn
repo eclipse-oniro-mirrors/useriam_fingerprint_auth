@@ -11,10 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-group("fingerprint_fuzztest") {
+group("fingerprintauth_fuzztest") {
   testonly = true
   deps = [
-    "fingerprintauthexecutorhdi_fuzzer:FingerprintAuthExecutorHdiFuzzTest",
+    "fingerprintauthallinoneexecutorhdi_fuzzer:FingerprintAuthAllInOneExecutorHdiFuzzTest",
     "fingerprintauthservice_fuzzer:FingerprintAuthServiceFuzzTest",
   ]
 }

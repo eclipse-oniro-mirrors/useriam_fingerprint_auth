@@ -21,7 +21,7 @@
 
 #include "nocopyable.h"
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 #include "isa_command_processor.h"
 #include "isensor_illumination_task.h"
 
@@ -37,21 +37,21 @@ public:
     ~SensorIlluminationManager() = default;
     static std::shared_ptr<SensorIlluminationManager> GetInstance();
 
-    UserAuth::ResultCode ProcessSaCommand(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode ProcessSaCommand(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommand &command) override;
-    void OnHdiDisconnect(std::shared_ptr<FingerprintAuthExecutorHdi> executor) override;
+    void OnHdiDisconnect(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor) override;
 
 private:
-    UserAuth::ResultCode EnableSensorIllumination(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode EnableSensorIllumination(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommandParam param);
-    UserAuth::ResultCode DisableSensorIllumination(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode DisableSensorIllumination(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommandParam param);
-    UserAuth::ResultCode TurnOnSensorIllumination(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode TurnOnSensorIllumination(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommandParam param);
-    UserAuth::ResultCode TurnOffSensorIllumination(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode TurnOffSensorIllumination(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommandParam param);
 
-    std::shared_ptr<FingerprintAuthExecutorHdi> executorInProc_ = nullptr;
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executorInProc_ = nullptr;
     std::shared_ptr<ISensorIlluminationTask> taskInProc_ = nullptr;
     std::mutex mutex_;
 };

@@ -41,7 +41,8 @@ namespace UserIam {
 namespace FingerprintAuth {
 FingerprintAuthExecutorCallbackHdi::FingerprintAuthExecutorCallbackHdi(
     std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType)
-    : frameworkCallback_(frameworkCallback), fingerCallbackHdiType_(fingerCallbackHdiType)
+    : frameworkCallback_(frameworkCallback),
+      fingerCallbackHdiType_(fingerCallbackHdiType)
 {
 }
 
@@ -87,10 +88,16 @@ int32_t FingerprintAuthExecutorCallbackHdi::OnTip(int32_t tip, const std::vector
 {
     IAM_LOGI("OnTip %{public}d", tip);
     IF_FALSE_LOGE_AND_RETURN_VAL(frameworkCallback_ != nullptr, HDF_FAILURE);
-    if (tip == HDI::FingerprintAuth::V1_2::FINGERPRINT_AUTH_TIP_SINGLE_AUTH_RESULT) {
+    if (tip == FingerprintTipsCode::FINGERPRINT_AUTH_TIP_SINGLE_AUTH_RESULT) {
         tip = UserAuth::USER_AUTH_TIP_SINGLE_AUTH_RESULT;
     }
     frameworkCallback_->OnAcquireInfo(tip, extraInfo);
+    return HDF_SUCCESS;
+}
+
+int32_t FingerprintAuthExecutorCallbackHdi::OnMessage(int32_t destRole, const std::vector<uint8_t> &msg)
+{
+    IAM_LOGI("OnMessage destRole %{public}d msg len %{public}zu", destRole, msg.size());
     return HDF_SUCCESS;
 }
 

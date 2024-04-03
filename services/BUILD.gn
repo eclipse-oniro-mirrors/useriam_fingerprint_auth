@@ -33,9 +33,9 @@ ohos_source_set("fingerprintauthservice_source_set") {
   }
   branch_protector_ret = "pac_ret"
   sources = [
+    "src/fingerprint_auth_all_in_one_executor_hdi.cpp",
     "src/fingerprint_auth_driver_hdi.cpp",
     "src/fingerprint_auth_executor_callback_hdi.cpp",
-    "src/fingerprint_auth_executor_hdi.cpp",
     "src/fingerprint_auth_interface_adapter.cpp",
     "src/fingerprint_auth_service.cpp",
     "src/memory_guard.cpp",
@@ -48,7 +48,7 @@ ohos_source_set("fingerprintauthservice_source_set") {
 
   external_deps = [
     "c_utils:utils",
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.2",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "hilog:libhilog",
     "miscdevice:vibrator_interface_native",
     "safwk:system_ability_fwk",

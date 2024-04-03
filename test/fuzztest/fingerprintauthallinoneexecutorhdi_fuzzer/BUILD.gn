@@ -14,10 +14,10 @@
 import("//build/config/features.gni")
 import("//build/test.gni")
 
-ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
+ohos_fuzztest("FingerprintAuthAllInOneExecutorHdiFuzzTest") {
   branch_protector_ret = "pac_ret"
   module_out_path = "fingerprint_auth/fingerprint_auth"
-  fuzz_config_file = "../fingerprintauthexecutorhdi_fuzzer"
+  fuzz_config_file = "."
 
   cflags = [
     "-g",
@@ -29,13 +29,13 @@ ohos_fuzztest("FingerprintAuthExecutorHdiFuzzTest") {
 
   sources = [
     "../iamfuzz/iam_fuzz_test.cpp",
-    "fingerprint_auth_executor_hdi_fuzzer.cpp",
+    "fingerprint_auth_all_in_one_executor_hdi_fuzzer.cpp",
   ]
 
   deps = [ "../common_fuzzer:fingerprintauthservice_source_set_fuzzer" ]
 
   external_deps = [
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.2",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "hilog:libhilog",
     "user_auth_framework:userauth_executors",
   ]

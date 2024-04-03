@@ -18,7 +18,7 @@
 
 #include "fingerprint_auth_hdi.h"
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 
 namespace OHOS {
 namespace UserIam {
@@ -29,9 +29,9 @@ public:
     ISaCommandProcessor() = default;
     virtual ~ISaCommandProcessor() = default;
 
-    virtual UserAuth::ResultCode ProcessSaCommand(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    virtual UserAuth::ResultCode ProcessSaCommand(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const SaCommand &command) = 0;
-    virtual void OnHdiDisconnect(std::shared_ptr<FingerprintAuthExecutorHdi> executor) = 0;
+    virtual void OnHdiDisconnect(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor) = 0;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam
