@@ -52,8 +52,8 @@ std::shared_ptr<SensorIlluminationManager> SensorIlluminationManager::GetInstanc
     return manager;
 }
 
-UserAuth::ResultCode SensorIlluminationManager::ProcessSaCommand(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
-    const SaCommand &command)
+UserAuth::ResultCode SensorIlluminationManager::ProcessSaCommand(
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommand &command)
 {
     IF_FALSE_LOGE_AND_RETURN_VAL(executor != nullptr, UserAuth::GENERAL_ERROR);
     std::lock_guard<std::mutex> lock(mutex_);
@@ -78,7 +78,7 @@ UserAuth::ResultCode SensorIlluminationManager::ProcessSaCommand(std::shared_ptr
     return result;
 }
 
-void SensorIlluminationManager::OnHdiDisconnect(std::shared_ptr<FingerprintAuthExecutorHdi> executor)
+void SensorIlluminationManager::OnHdiDisconnect(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor)
 {
     IF_FALSE_LOGE_AND_RETURN(executor != nullptr);
 
@@ -102,7 +102,7 @@ void SensorIlluminationManager::OnHdiDisconnect(std::shared_ptr<FingerprintAuthE
 }
 
 UserAuth::ResultCode SensorIlluminationManager::EnableSensorIllumination(
-    std::shared_ptr<FingerprintAuthExecutorHdi> executor, const SaCommandParam param)
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommandParam param)
 {
     if (executorInProc_ != nullptr) {
         IAM_LOGE("another executor is using this module");
@@ -132,9 +132,9 @@ UserAuth::ResultCode SensorIlluminationManager::EnableSensorIllumination(
     IF_FALSE_LOGE_AND_RETURN_VAL(param.enableSensorIllumination.centerY < MAX_X_Y_VALUE, UserAuth::GENERAL_ERROR);
     IF_FALSE_LOGE_AND_RETURN_VAL(param.enableSensorIllumination.radius < MAX_RADIUS_LEN, UserAuth::GENERAL_ERROR);
 
-    UserAuth::ResultCode enableResultCode = taskInProc->EnableSensorIllumination(
-        param.enableSensorIllumination.centerX, param.enableSensorIllumination.centerY,
-        param.enableSensorIllumination.radius, param.enableSensorIllumination.color);
+    UserAuth::ResultCode enableResultCode = taskInProc->EnableSensorIllumination(param.enableSensorIllumination.centerX,
+        param.enableSensorIllumination.centerY, param.enableSensorIllumination.radius,
+        param.enableSensorIllumination.color);
     IF_FALSE_LOGE_AND_RETURN_VAL(enableResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
 
     executorInProc_ = executor;
@@ -144,7 +144,7 @@ UserAuth::ResultCode SensorIlluminationManager::EnableSensorIllumination(
 }
 
 UserAuth::ResultCode SensorIlluminationManager::DisableSensorIllumination(
-    std::shared_ptr<FingerprintAuthExecutorHdi> executor, const SaCommandParam param)
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommandParam param)
 {
     if (executorInProc_ != executor) {
         IAM_LOGE("illumination is not enabled for this executor");
@@ -166,7 +166,7 @@ UserAuth::ResultCode SensorIlluminationManager::DisableSensorIllumination(
 }
 
 UserAuth::ResultCode SensorIlluminationManager::TurnOnSensorIllumination(
-    std::shared_ptr<FingerprintAuthExecutorHdi> executor, const SaCommandParam param)
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommandParam param)
 {
     if (executorInProc_ != executor) {
         IAM_LOGE("illumination is not enabled for this executor");
@@ -185,7 +185,7 @@ UserAuth::ResultCode SensorIlluminationManager::TurnOnSensorIllumination(
 }
 
 UserAuth::ResultCode SensorIlluminationManager::TurnOffSensorIllumination(
-    std::shared_ptr<FingerprintAuthExecutorHdi> executor, const SaCommandParam param)
+    std::shared_ptr<FingerprintAllInOneExecutorHdi> executor, const SaCommandParam param)
 {
     if (executorInProc_ != executor) {
         IAM_LOGE("illumination is not enabled for this executor");

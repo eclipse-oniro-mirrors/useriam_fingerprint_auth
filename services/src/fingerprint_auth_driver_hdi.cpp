@@ -25,20 +25,17 @@
 #include "iam_logger.h"
 #include "iam_ptr.h"
 
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 #include "fingerprint_auth_defines.h"
-#include "fingerprint_auth_executor_hdi.h"
 #include "fingerprint_auth_hdi.h"
 #include "fingerprint_auth_interface_adapter.h"
 
 #define LOG_TAG "FINGERPRINT_AUTH_SA"
-using namespace OHOS::HDI::FingerprintAuth::V1_0;
 
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
 namespace UserAuth = OHOS::UserIam::UserAuth;
-using namespace OHOS::UserIam;
-
 std::mutex FingerprintAuthDriverHdi::mutex_;
 
 FingerprintAuthDriverHdi::FingerprintAuthDriverHdi(
@@ -56,8 +53,8 @@ void FingerprintAuthDriverHdi::GetExecutorList(std::vector<std::shared_ptr<UserA
         return;
     }
 
-    std::vector<sptr<IExecutor>> iExecutorList;
-    auto ret = fingerprintIf->GetExecutorListV1_1(iExecutorList);
+    std::vector<sptr<IAllInOneExecutor>> iExecutorList;
+    auto ret = fingerprintIf->GetExecutorList(iExecutorList);
     if (ret != HDF_SUCCESS) {
         IAM_LOGE("GetExecutorList fail");
         return;
@@ -70,7 +67,7 @@ void FingerprintAuthDriverHdi::GetExecutorList(std::vector<std::shared_ptr<UserA
             IAM_LOGE("iExecutor is nullptr");
             continue;
         }
-        auto executor = Common::MakeShared<FingerprintAuthExecutorHdi>(iExecutor);
+        auto executor = Common::MakeShared<FingerprintAllInOneExecutorHdi>(iExecutor);
         if (executor == nullptr) {
             IAM_LOGE("make share failed");
             continue;

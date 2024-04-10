@@ -53,8 +53,8 @@
         "inner_kits": [
         ],
         "test": [
-          "//base/useriam/fingerprint_auth/test/fuzztest:fingerprint_fuzztest",
-          "//base/useriam/fingerprint_auth/test/unittest:fingerprint_unittest"
+          "//base/useriam/fingerprint_auth/test/fuzztest:fingerprintauth_fuzztest",
+          "//base/useriam/fingerprint_auth/test/unittest:fingerprintauth_unittest"
         ]
       }
     }

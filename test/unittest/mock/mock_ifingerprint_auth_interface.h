@@ -27,9 +27,7 @@ class MockIFingerprintAuthInterface : public IFingerprintAuthInterface {
 public:
     virtual ~MockIFingerprintAuthInterface() = default;
 
-    MOCK_METHOD1(GetExecutorList, int32_t(std::vector<sptr<IExecutorV1_0>> &executorList));
-
-    MOCK_METHOD1(GetExecutorListV1_1, int32_t(std::vector<sptr<IExecutor>> &executorList));
+    MOCK_METHOD1(GetExecutorList, int32_t(std::vector<sptr<IAllInOneExecutor>> &executorList));
 };
 } // namespace FingerprintAuth
 } // namespace UserIam

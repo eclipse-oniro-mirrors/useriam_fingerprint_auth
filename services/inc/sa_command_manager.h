@@ -24,7 +24,7 @@
 
 #include "fingerprint_auth_hdi.h"
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 #include "isa_command_processor.h"
 
 namespace OHOS {
@@ -40,9 +40,9 @@ public:
     void UnregisterSaCommandProcessor(std::vector<SaCommandId> commandIds,
         std::shared_ptr<ISaCommandProcessor> processor);
 
-    UserAuth::ResultCode ProcessSaCommands(std::shared_ptr<FingerprintAuthExecutorHdi> executor,
+    UserAuth::ResultCode ProcessSaCommands(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor,
         const std::vector<SaCommand> &commands);
-    void OnHdiDisconnect(std::shared_ptr<FingerprintAuthExecutorHdi> executor);
+    void OnHdiDisconnect(std::shared_ptr<FingerprintAllInOneExecutorHdi> executor);
 
 private:
     SaCommandManager() = default;

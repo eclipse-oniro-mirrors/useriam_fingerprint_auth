@@ -27,8 +27,7 @@ namespace UserIam {
 namespace FingerprintAuth {
 namespace {
 const char *SO_NAME = "libfingerprintauthservice_ex.z.so";
-const char *GET_SENSOR_ILLUMINATION_TASK_SYMBOL_NAME =
-    "_ZN4OHOS7UserIam15FingerprintAuth25GetSensorIlluminationTaskEv";
+const char *GET_SENSOR_ILLUMINATION_TASK_SYMBOL_NAME = "_ZN4OHOS7UserIam15FingerprintAuth25GetSensorIlluminationTaskEv";
 using GetSensorIlluminationTaskFunc = std::shared_ptr<ISensorIlluminationTask> (*)();
 } // namespace
 

@@ -17,7 +17,7 @@ import("//build/test.gni")
 ohos_fuzztest("FingerprintAuthServiceFuzzTest") {
   branch_protector_ret = "pac_ret"
   module_out_path = "fingerprint_auth/fingerprint_auth"
-  fuzz_config_file = "../fingerprintauthservice_fuzzer"
+  fuzz_config_file = "."
 
   cflags = [
     "-g",

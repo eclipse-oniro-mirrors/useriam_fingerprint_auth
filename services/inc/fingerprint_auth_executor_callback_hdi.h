@@ -21,7 +21,7 @@
 #include "hdf_base.h"
 #include "nocopyable.h"
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 #include "fingerprint_auth_hdi.h"
 #include "iam_executor_iexecute_callback.h"
 
@@ -40,12 +40,13 @@ enum FingerCallbackHdiType : int32_t {
 
 class FingerprintAuthExecutorCallbackHdi : public IExecutorCallback, public NoCopyable {
 public:
-    FingerprintAuthExecutorCallbackHdi(
-        std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback, FingerCallbackHdiType fingerCallbackHdiType);
+    FingerprintAuthExecutorCallbackHdi(std::shared_ptr<UserAuth::IExecuteCallback> frameworkCallback,
+        FingerCallbackHdiType fingerCallbackHdiType);
     ~FingerprintAuthExecutorCallbackHdi() override = default;
 
     int32_t OnResult(int32_t result, const std::vector<uint8_t> &extraInfo) override;
     int32_t OnTip(int32_t tip, const std::vector<uint8_t> &extraInfo) override;
+    int32_t OnMessage(int32_t destRole, const std::vector<uint8_t> &msg) override;
 
 private:
     void DoVibrator();

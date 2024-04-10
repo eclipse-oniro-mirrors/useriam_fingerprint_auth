@@ -23,20 +23,16 @@
 namespace OHOS {
 namespace UserIam {
 namespace FingerprintAuth {
-class MockIExecutor : public IExecutor {
+class MockIAllInOneExecutor : public IAllInOneExecutor {
 public:
-    virtual ~MockIExecutor() = default;
+    virtual ~MockIAllInOneExecutor() = default;
 
     MOCK_METHOD1(GetExecutorInfo, int32_t(ExecutorInfo &executorInfo));
-    MOCK_METHOD2(GetTemplateInfo, int32_t(uint64_t templateId, TemplateInfo &templateInfo));
     MOCK_METHOD3(OnRegisterFinish,
         int32_t(const std::vector<uint64_t> &templateIdList, const std::vector<uint8_t> &frameworkPublicKey,
             const std::vector<uint8_t> &extraInfo));
     MOCK_METHOD3(Enroll,
         int32_t(uint64_t scheduleId, const std::vector<uint8_t> &extraInfo,
-            const sptr<IExecutorCallback> &callbackObj));
-    MOCK_METHOD4(Authenticate,
-        int32_t(uint64_t scheduleId, const std::vector<uint64_t> &templateIdList, const std::vector<uint8_t> &extraInfo,
             const sptr<IExecutorCallback> &callbackObj));
     MOCK_METHOD3(Identify,
         int32_t(uint64_t scheduleId, const std::vector<uint8_t> &extraInfo,
@@ -45,14 +41,15 @@ public:
     MOCK_METHOD1(Cancel, int32_t(uint64_t scheduleId));
     MOCK_METHOD3(SendCommand,
         int32_t(int32_t commandId, const std::vector<uint8_t> &extraInfo, const sptr<IExecutorCallback> &callbackObj));
-    MOCK_METHOD5(AuthenticateV1_1,
-        int32_t (uint64_t scheduleId, const std::vector<uint64_t>& templateIdList,
-            bool endAfterFirstFail, const std::vector<uint8_t>& extraInfo, const sptr<IExecutorCallback>& callbackObj));
-    MOCK_METHOD3(GetProperty, int32_t(const std::vector<uint64_t>& templateIdList,
-         const std::vector<GetPropertyType>& propertyTypes, Property& property));
-    MOCK_METHOD1(SetCachedTemplates, int32_t(const std::vector<uint64_t>& templateIdList));
-    MOCK_METHOD1(RegisterSaCommandCallback,
-        int32_t(const sptr<OHOS::HDI::FingerprintAuth::V1_2::ISaCommandCallback>& callbackObj));
+    MOCK_METHOD5(Authenticate,
+        int32_t(uint64_t scheduleId, const std::vector<uint64_t> &templateIdList, bool endAfterFirstFail,
+            const std::vector<uint8_t> &extraInfo, const sptr<IExecutorCallback> &callbackObj));
+    MOCK_METHOD3(GetProperty,
+        int32_t(const std::vector<uint64_t> &templateIdList, const std::vector<int32_t> &propertyTypes,
+            Property &property));
+    MOCK_METHOD1(SetCachedTemplates, int32_t(const std::vector<uint64_t> &templateIdList));
+    MOCK_METHOD1(RegisterSaCommandCallback, int32_t(const sptr<ISaCommandCallback> &callbackObj));
+    MOCK_METHOD3(SendMessage, int32_t(uint64_t scheduleId, int32_t srcRole, const std::vector<uint8_t> &msg));
 };
 } // namespace FingerprintAuth
 } // namespace UserIam

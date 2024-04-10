@@ -49,7 +49,7 @@ ohos_source_set("fingerprintauthservice_ex_source_set") {
     "c_utils:utils",
     "common_event_service:cesfwk_innerkits",
     "display_manager:displaymgr",
-    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_1.2",
+    "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "graphic_2d:librender_service_client",
     "hilog:libhilog",
     "ipc:ipc_single",

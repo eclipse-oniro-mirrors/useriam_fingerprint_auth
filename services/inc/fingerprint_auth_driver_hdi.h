@@ -24,7 +24,7 @@
 #include "iam_executor_iauth_driver_hdi.h"
 #include "iam_executor_iauth_executor_hdi.h"
 
-#include "fingerprint_auth_executor_hdi.h"
+#include "fingerprint_auth_all_in_one_executor_hdi.h"
 #include "fingerprint_auth_interface_adapter.h"
 
 namespace OHOS {
@@ -43,7 +43,7 @@ public:
 private:
     static std::mutex mutex_;
     const std::shared_ptr<FingerprintAuthInterfaceAdapter> fingerprintAuthInterfaceAdapter_;
-    std::vector<std::shared_ptr<FingerprintAuthExecutorHdi>> fingerprintAuthExecutorList_;
+    std::vector<std::shared_ptr<FingerprintAllInOneExecutorHdi>> fingerprintAuthExecutorList_;
 };
 } // namespace FingerprintAuth
 } // namespace UserIam

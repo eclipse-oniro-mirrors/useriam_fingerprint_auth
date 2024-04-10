@@ -16,8 +16,8 @@
 #ifndef MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER
 #define MOCK_FINGERPRINT_AUTH_INTERFACE_ADAPTER
 
-#include "fingerprint_auth_interface_adapter.h"
 #include "fingerprint_auth_hdi.h"
+#include "fingerprint_auth_interface_adapter.h"
 #include "gmock/gmock.h"
 
 namespace OHOS {

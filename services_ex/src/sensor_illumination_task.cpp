@@ -23,8 +23,8 @@
 #include "pipeline/rs_render_thread.h"
 #include "system_ability_definition.h"
 #include "system_ability_status_change_stub.h"
-#include "transaction/rs_transaction.h"
 #include "transaction/rs_interfaces.h"
+#include "transaction/rs_transaction.h"
 #include "ui/rs_surface_extractor.h"
 
 #include "iam_check.h"
@@ -97,8 +97,8 @@ Drawing::ColorQuad ConvertToDrawingColor(uint32_t color)
     constexpr uint32_t GIndex = 1;
     constexpr uint32_t BIndex = 2;
     constexpr uint32_t AIndex = 3;
-    return Drawing::Color::ColorQuadSetARGB(
-        colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex], colorBytes[AIndex]);
+    return Drawing::Color::ColorQuadSetARGB(colorBytes[RIndex], colorBytes[GIndex], colorBytes[BIndex],
+        colorBytes[AIndex]);
 }
 #endif
 
@@ -191,15 +191,13 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     bool convertRetY = convertThousandthToPx(centerY, defaultDisplay->GetHeight(), centerYInPx);
     IF_FALSE_LOGE_AND_RETURN_VAL(convertRetY == true, ResultCode::GENERAL_ERROR);
 
-    canvasParam_ = (CanvasParam) {
-        .centerXInPx = centerXInPx,
+    canvasParam_ = (CanvasParam) { .centerXInPx = centerXInPx,
         .centerYInPy = centerYInPx,
         .radius = radius,
         .color = color,
         .alpha = 0,
         .frameWidth = width,
-        .frameHeight = height
-    };
+        .frameHeight = height };
 
     defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
     defaultDisplayId_ = defaultDisplay->GetId();
