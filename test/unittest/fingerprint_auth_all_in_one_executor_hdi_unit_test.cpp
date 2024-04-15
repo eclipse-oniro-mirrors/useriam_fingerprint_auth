@@ -498,6 +498,24 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendMessage_001, TestSize.Level0)
+{
+    for (const auto &pair : RESULT_CODE_MAP) {
+        sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
+        ASSERT_TRUE(executorProxy != nullptr);
+        EXPECT_CALL(*executorProxy, SendMessage(_, _, _))
+            .Times(Exactly(1))
+            .WillOnce(Return(pair.first));
+        auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(executorProxy);
+        auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
+        ASSERT_TRUE(executeCallback != nullptr);
+        std::vector<uint8_t> data;
+        auto ret =
+            executorHdi->SendMessage(1, 1, data);
+        EXPECT_TRUE(ret == pair.second);
+    }
+}
+
 HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_001, TestSize.Level0)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);

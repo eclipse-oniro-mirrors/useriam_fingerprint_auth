@@ -85,6 +85,19 @@ IamResultCode FingerprintAllInOneExecutorHdi::OnRegisterFinish(const std::vector
     return IamResultCode::SUCCESS;
 }
 
+IamResultCode FingerprintAllInOneExecutorHdi::SendMessage(uint64_t scheduleId, int32_t srcRole,
+    const std::vector<uint8_t> &msg)
+{
+    IF_FALSE_LOGE_AND_RETURN_VAL(executorProxy_ != nullptr, IamResultCode::GENERAL_ERROR);
+    int32_t status = executorProxy_->SendMessage(scheduleId, srcRole, msg);
+    IamResultCode result = ConvertResultCode(status);
+    if (result != IamResultCode::SUCCESS) {
+        IAM_LOGE("Authenticate fail result %{public}d", result);
+        return result;
+    }
+    return IamResultCode::SUCCESS;
+}
+
 IamResultCode FingerprintAllInOneExecutorHdi::Enroll(uint64_t scheduleId, const UserAuth::EnrollParam &param,
     const std::shared_ptr<UserAuth::IExecuteCallback> &callbackObj)
 {
@@ -242,6 +255,7 @@ IamResultCode FingerprintAllInOneExecutorHdi::MoveHdiExecutorInfo(ExecutorInfo &
         IAM_LOGE("ConvertExecutorSecureLevel fail result %{public}d", result);
         return result;
     }
+    out.maxTemplateAcl = in.maxTemplateAcl;
     in.publicKey.swap(out.publicKey);
     return IamResultCode::SUCCESS;
 }
