@@ -14,7 +14,7 @@
 import("//build/ohos.gni")
 
 declare_args() {
-  oh_fingerprintauth_enabled = true
+  fingerprint_auth_enabled = true
 }
 
 config("fingerprintauthservice_config") {
