@@ -1,5 +1,5 @@
 {
-    "name": "@openharmony/fingerprint_auth",
+    "name": "@ohos/fingerprint_auth",
     "version": "4.0",
     "description": "fingerprint authentication capability",
     "homePage": "https://gitee.com/openharmony",
@@ -35,7 +35,8 @@
           "safwk",
           "samgr",
           "user_auth_framework",
-          "window_manager"
+          "window_manager",
+          "hdf_core"
         ]
       },
       "build": {
