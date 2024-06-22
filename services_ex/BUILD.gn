@@ -57,6 +57,7 @@ ohos_source_set("fingerprintauthservice_ex_source_set") {
     "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
+    "hdf_core:libhdf_utils"
   ]
 
   if (defined(use_rosen_drawing) && use_rosen_drawing) {
