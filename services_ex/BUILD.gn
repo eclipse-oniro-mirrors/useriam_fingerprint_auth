@@ -51,6 +51,7 @@ ohos_source_set("fingerprintauthservice_ex_source_set") {
     "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "graphic_2d:librender_service_client",
+    "graphic_2d:libcomposer",
     "graphic_surface:buffer_handle",
     "graphic_surface:surface_headers",
     "hdf_core:libhdf_utils",
