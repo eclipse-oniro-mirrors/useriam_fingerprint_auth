@@ -78,13 +78,17 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
   ]
 
   external_deps = [
-    "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "graphic_2d:librender_service_client",
     "hilog:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
   ]
+
+  if (use_display_manager_component) {
+    external_deps += [ "display_manager:displaymgr" ]
+    defines = [ "Test_USE_DISPLAY_MANAGER_COMPONENT" ]
+  }
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 

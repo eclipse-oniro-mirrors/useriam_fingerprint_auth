@@ -19,7 +19,9 @@
 #include "common_event_subscriber.h"
 #include "common_event_support.h"
 #include "iservice_registry.h"
+#ifdef CONFIG_USE_POWER_MANAGER_COMPONENT
 #include "power_mgr_client.h"
+#endif
 #include "system_ability_definition.h"
 #include "system_ability_status_change_stub.h"
 #include "want.h"
@@ -37,7 +39,9 @@ namespace UserIam {
 namespace FingerprintAuth {
 using namespace EventFwk;
 using namespace AAFwk;
+#ifdef CONFIG_USE_POWER_MANAGER_COMPONENT
 using namespace PowerMgr;
+#endif
 using ResultCode = UserAuth::ResultCode;
 
 namespace {
@@ -132,8 +136,10 @@ void ScreenStateMonitor::Subscribe()
     ResultCode result = EventSubscriber::Subscribe();
     IF_FALSE_LOGE_AND_RETURN(result == ResultCode::SUCCESS);
     isSubscribing_ = true;
+#ifdef CONFIG_USE_POWER_MANAGER_COMPONENT    
     isOn_ = PowerMgrClient::GetInstance().IsScreenOn();
     IAM_LOGI("screen on %{public}d", isOn_);
+#endif    
 }
 
 void ScreenStateMonitor::Unsubscribe()
