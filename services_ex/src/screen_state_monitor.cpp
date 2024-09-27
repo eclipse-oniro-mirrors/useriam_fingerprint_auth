@@ -136,10 +136,10 @@ void ScreenStateMonitor::Subscribe()
     ResultCode result = EventSubscriber::Subscribe();
     IF_FALSE_LOGE_AND_RETURN(result == ResultCode::SUCCESS);
     isSubscribing_ = true;
-#ifdef CONFIG_USE_POWER_MANAGER_COMPONENT    
+#ifdef CONFIG_USE_POWER_MANAGER_COMPONENT
     isOn_ = PowerMgrClient::GetInstance().IsScreenOn();
     IAM_LOGI("screen on %{public}d", isOn_);
-#endif    
+#endif
 }
 
 void ScreenStateMonitor::Unsubscribe()

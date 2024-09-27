@@ -237,7 +237,7 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
     uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
 #else
     uint32_t brightness = INVALID_BRIGHTNESS;
-#endif  
+#endif
     IF_FALSE_LOGE_AND_RETURN_VAL(brightness != INVALID_BRIGHTNESS, ResultCode::GENERAL_ERROR);
     IAM_LOGI("get device brightness %{public}u", brightness);
 
