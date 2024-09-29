@@ -232,7 +232,7 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
     IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface_ != nullptr, ResultCode::GENERAL_ERROR);
 
     IAM_LOGI("start");
-    
+
 #ifdef CONFIG_USE_DISPLAY_MANAGER_COMPONENT
     uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
 #else
