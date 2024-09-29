@@ -88,7 +88,6 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
 
   if (use_display_manager_component) {
     external_deps += [ "display_manager:displaymgr" ]
-    defines = [ "CONFIG_USE_DISPLAY_MANAGER_COMPONENT" ]
   }
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
