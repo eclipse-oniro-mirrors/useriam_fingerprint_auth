@@ -236,7 +236,6 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
 #ifdef CONFIG_USE_DISPLAY_MANAGER_COMPONENT
     uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
 #else
-    IAM_LOGI("display_manager component is not used.");
     uint32_t brightness = INVALID_BRIGHTNESS;
 #endif
     IF_FALSE_LOGE_AND_RETURN_VAL(brightness != INVALID_BRIGHTNESS, ResultCode::GENERAL_ERROR);
