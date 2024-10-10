@@ -18,7 +18,9 @@
 #include "common_event_manager.h"
 #include "common_event_subscriber.h"
 #include "common_event_support.h"
+#ifdef CONFIG_USE_DISPLAY_MANAGER_COMPONENT
 #include "display_power_mgr_client.h"
+#endif
 #include "iservice_registry.h"
 #include "pipeline/rs_render_thread.h"
 #include "system_ability_definition.h"
@@ -231,7 +233,11 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
 
     IAM_LOGI("start");
 
+#ifdef CONFIG_USE_DISPLAY_MANAGER_COMPONENT
     uint32_t brightness = DisplayPowerMgr::DisplayPowerMgrClient::GetInstance().GetDeviceBrightness();
+#else
+    uint32_t brightness = INVALID_BRIGHTNESS;
+#endif
     IF_FALSE_LOGE_AND_RETURN_VAL(brightness != INVALID_BRIGHTNESS, ResultCode::GENERAL_ERROR);
     IAM_LOGI("get device brightness %{public}u", brightness);
 

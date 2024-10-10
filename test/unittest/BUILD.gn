@@ -11,6 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//base/useriam/fingerprint_auth/fingerprint_auth.gni")
 import("//build/test.gni")
 
 ohos_unittest("FingerprintAuthServiceUnitTest") {
@@ -78,13 +79,16 @@ ohos_unittest("FingerprintSensorIlluminationTest") {
   ]
 
   external_deps = [
-    "display_manager:displaymgr",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "graphic_2d:librender_service_client",
     "hilog:libhilog",
     "user_auth_framework:userauth_executors",
     "window_manager:libdm",
   ]
+
+  if (use_display_manager_component) {
+    external_deps += [ "display_manager:displaymgr" ]
+  }
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
 
