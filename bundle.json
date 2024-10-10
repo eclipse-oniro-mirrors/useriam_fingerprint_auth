@@ -28,7 +28,6 @@
           "display_manager",
           "drivers_interface_fingerprint_auth",
           "egl",
-          "eventhandler",
           "graphic_2d",
           "graphic_surface",
           "hilog",
