@@ -54,6 +54,7 @@ const CommonEventSubscribeInfo GetCommonEventSubscribeInfo()
 }
 } // namespace
 
+typedef void(*SendEventSubscriberCallback)(const bool isOn);
 class EventSubscriber : public CommonEventSubscriber, public NoCopyable {
 public:
     explicit EventSubscriber(const CommonEventSubscribeInfo &subscribeInfo) : CommonEventSubscriber(subscribeInfo) {};
@@ -64,6 +65,11 @@ public:
     static void Unsubscribe();
 
     void OnReceiveEvent(const CommonEventData &eventData) override;
+    void SetCallback(SendEventSubscriberCallback callback);
+    SendEventSubscriberCallback GetCallback();
+private:
+    SendEventSubscriberCallback eventSubscriberCallback_ = nullptr;
+    std::mutex eventSubscriberMutex_;
 };
 
 std::shared_ptr<EventSubscriber> EventSubscriber::GetInstance()
@@ -111,11 +117,31 @@ void EventSubscriber::OnReceiveEvent(const CommonEventData &eventData)
         return;
     }
     IAM_LOGI("receive event %{public}s", action.c_str());
+    auto instance = GetInstance();
+    IF_FALSE_LOGE_AND_RETURN(instance != nullptr);
+    SendEventSubscriberCallback eventSubscriberCallback = instance->GetCallback();
+    IF_FALSE_LOGE_AND_RETURN(eventSubscriberCallback != nullptr);
     if (action == CommonEventSupport::COMMON_EVENT_SCREEN_ON) {
-        ScreenStateMonitor::GetInstance().SetScreenOn(true);
+        eventSubscriberCallback(true);
     } else {
-        ScreenStateMonitor::GetInstance().SetScreenOn(false);
+        eventSubscriberCallback(false);
     }
+}
+
+void EventSubscriber::SetCallback(SendEventSubscriberCallback callback)
+{
+    std::lock_guard<std::mutex> lock(eventSubscriberMutex_);
+
+    if (eventSubscriberCallback_ == nullptr) {
+        eventSubscriberCallback_ = callback;
+    }
+}
+
+SendEventSubscriberCallback EventSubscriber::GetCallback()
+{
+    std::lock_guard<std::mutex> lock(eventSubscriberMutex_);
+
+    return eventSubscriberCallback_;
 }
 
 ScreenStateMonitor &ScreenStateMonitor::GetInstance()
@@ -133,6 +159,11 @@ void ScreenStateMonitor::Subscribe()
         return;
     }
 
+    auto eventSubscriber = EventSubscriber::GetInstance();
+    IF_FALSE_LOGE_AND_RETURN(eventSubscriber != nullptr);
+    eventSubscriber->SetCallback([](bool isOn) {
+        ScreenStateMonitor::GetInstance().SetScreenOn(isOn);
+    });
     ResultCode result = EventSubscriber::Subscribe();
     IF_FALSE_LOGE_AND_RETURN(result == ResultCode::SUCCESS);
     isSubscribing_ = true;
