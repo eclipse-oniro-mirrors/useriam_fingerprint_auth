@@ -53,7 +53,7 @@ void FingerprintAuthSensorIllumination::TearDown()
 {
 }
 
-HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_001, TestSize.Level0)
+HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_001, TestSize.Level4)
 {
     auto acquireRet = ServiceExManager::GetInstance().Acquire();
     EXPECT_TRUE(acquireRet == UserAuth::SUCCESS);
@@ -90,7 +90,7 @@ HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_00
     task = nullptr;
 }
 
-HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_002, TestSize.Level0)
+HWTEST_F(FingerprintAuthSensorIllumination, FingerprintAuthSensorIllumination_002, TestSize.Level4)
 {
     SaCommand enableCommand = { .id = SaCommandId::ENABLE_SENSOR_ILLUMINATION,
         .param = { .enableSensorIllumination = { 500, 500, 200, 0, WHITE } } };

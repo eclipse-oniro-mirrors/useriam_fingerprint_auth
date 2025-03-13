@@ -52,7 +52,7 @@ void ScreenStateMonitorUnitTest::TearDown()
 {
 }
 
-HWTEST_F(ScreenStateMonitorUnitTest, ScreenStateMonitorUnitTest_001, TestSize.Level0)
+HWTEST_F(ScreenStateMonitorUnitTest, ScreenStateMonitorUnitTest_001, TestSize.Level4)
 {
     IAM_LOGI("begin ScreenStateMonitorUnitTest_001");
     ScreenStateMonitor::GetInstance().Subscribe();
