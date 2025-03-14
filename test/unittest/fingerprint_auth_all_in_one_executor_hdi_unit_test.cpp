@@ -270,7 +270,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_001, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
@@ -287,7 +287,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_002, TestSize.Level1)
 {
     sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
     ASSERT_TRUE(executorProxy != nullptr);
@@ -297,7 +297,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_003, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Enroll_003, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
@@ -306,7 +306,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_001, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
@@ -325,7 +325,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_002, TestSize.Level1)
 {
     auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
     ASSERT_TRUE(executorProxy != nullptr);
@@ -336,7 +336,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_003, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Authenticate_003, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
@@ -345,7 +345,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
         UserAuth::AuthenticateParam { 0, std::vector<uint64_t>(), std::vector<uint8_t>(), false }, executeCallback);
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_001, TestSize.Level2)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
@@ -362,7 +362,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_002, TestSize.Level2)
 {
     auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
     ASSERT_TRUE(executorProxy != nullptr);
@@ -372,7 +372,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_003, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Identify_003, TestSize.Level2)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
@@ -381,7 +381,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Delete_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Delete_001, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
@@ -395,14 +395,14 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Delete_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Delete_002, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto ret = executorHdi->Delete(std::vector<uint64_t>());
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Cancel_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Cancel_001, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
@@ -416,14 +416,14 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Cancel_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_Cancel_002, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto ret = executorHdi->Cancel(0);
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_001, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
@@ -432,7 +432,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_002, TestSize.Level1)
 {
     auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
     ASSERT_TRUE(executorProxy != nullptr);
@@ -443,7 +443,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_003, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_003, TestSize.Level1)
 {
     static const std::map<IamPropertyMode, pair<DriverCommandId, IamResultCode>> data = {
         { IamPropertyMode::PROPERTY_INIT_ALGORITHM, { DriverCommandId::INIT_ALGORITHM, IamResultCode::SUCCESS } },
@@ -480,7 +480,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_004, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendCommand_004, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
@@ -498,7 +498,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendMessage_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SendMessage_001, TestSize.Level2)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
@@ -516,7 +516,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_001, TestSize.Level2)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     ASSERT_TRUE(executorHdi != nullptr);
@@ -527,7 +527,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_002, TestSize.Level2)
 {
     auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
     ASSERT_TRUE(executorProxy != nullptr);
@@ -540,7 +540,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_003, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_GetProperty_003, TestSize.Level2)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
@@ -562,7 +562,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SetCachedTemplates_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SetCachedTemplates_001, TestSize.Level1)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     ASSERT_TRUE(executorHdi != nullptr);
@@ -571,7 +571,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     EXPECT_TRUE(ret == IamResultCode::GENERAL_ERROR);
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SetCachedTemplates_002, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SetCachedTemplates_002, TestSize.Level1)
 {
     for (const auto &pair : RESULT_CODE_MAP) {
         auto executorProxy = new (std::nothrow) MockIAllInOneExecutor();
@@ -587,7 +587,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
     }
 }
 
-HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_OnHdiDisconnect_001, TestSize.Level0)
+HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_OnHdiDisconnect_001, TestSize.Level3)
 {
     auto executorHdi = MakeShared<FingerprintAllInOneExecutorHdi>(nullptr);
     ASSERT_TRUE(executorHdi != nullptr);
@@ -595,7 +595,7 @@ HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_
 }
 
 HWTEST_F(FingerprintAllInOneExecutorHdiUnitTest, FingerprintAllInOneExecutorHdi_SaCommandCallback_OnSaCommands_001,
-    TestSize.Level0)
+    TestSize.Level3)
 {
     sptr<MockIAllInOneExecutor> executorProxy(new (std::nothrow) MockIAllInOneExecutor());
     ASSERT_TRUE(executorProxy != nullptr);

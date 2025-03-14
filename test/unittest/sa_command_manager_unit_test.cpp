@@ -69,7 +69,7 @@ SaCommandId SaCommandManagerUnitTest::getSaCommandId()
     return static_cast<SaCommandId>(saCommandId);
 }
 
-HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_001, TestSize.Level0)
+HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_001, TestSize.Level4)
 {
     IAM_LOGI("begin SaCommandManagerUnitTest_001");
     std::vector<SaCommandId> commandIds;
@@ -80,7 +80,7 @@ HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_001, TestSize.Level0
     SaCommandManager::GetInstance().OnHdiDisconnect(nullptr);
 }
 
-HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_002, TestSize.Level0)
+HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_002, TestSize.Level4)
 {
     IAM_LOGI("begin SaCommandManagerUnitTest_002");
     auto saCommandProcessor = Common::MakeShared<MockISaCommandProcessor>();
@@ -103,7 +103,7 @@ HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_002, TestSize.Level0
     SaCommandManager::GetInstance().UnregisterSaCommandProcessor(commandIds, saCommandProcessor);
 }
 
-HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_003, TestSize.Level0)
+HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_003, TestSize.Level4)
 {
     IAM_LOGI("begin SaCommandManagerUnitTest_003");
     auto saCommandProcessor = Common::MakeShared<MockISaCommandProcessor>();
@@ -125,7 +125,7 @@ HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_003, TestSize.Level0
     SaCommandManager::GetInstance().UnregisterSaCommandProcessor(commandIds, saCommandProcessor);
 }
 
-HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_004, TestSize.Level0)
+HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_004, TestSize.Level4)
 {
     IAM_LOGI("begin SaCommandManagerUnitTest_004");
     auto saCommandProcessor = Common::MakeShared<MockISaCommandProcessor>();

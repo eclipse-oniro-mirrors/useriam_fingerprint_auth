@@ -202,7 +202,7 @@ HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_GetExecutorL
     EXPECT_TRUE(executorList.size() == 0);
 }
 
-HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_OnHdiDisconnectTest_001, TestSize.Level0)
+HWTEST_F(FingerprintAuthDriverHdiUnitTest, FingerprintAuthDriverHdi_OnHdiDisconnectTest_001, TestSize.Level4)
 {
     sptr<MockIFingerprintAuthInterface> interface(new (std::nothrow) MockIFingerprintAuthInterface());
     ASSERT_TRUE(interface != nullptr);

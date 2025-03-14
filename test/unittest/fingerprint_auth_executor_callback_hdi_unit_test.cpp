@@ -56,7 +56,7 @@ void FingerprintAuthExecutorCallbackHdiUnitTest ::TearDown()
 {
 }
 
-HWTEST_F(FingerprintAuthExecutorCallbackHdiUnitTest, FingerprintAuthExecutorCallback_OnAcquireInfo_001, TestSize.Level0)
+HWTEST_F(FingerprintAuthExecutorCallbackHdiUnitTest, FingerprintAuthExecutorCallback_OnAcquireInfo_001, TestSize.Level3)
 {
     auto executeCallback = MakeShared<UserIam::UserAuth::MockIExecuteCallback>();
     ASSERT_TRUE(executeCallback != nullptr);
@@ -73,7 +73,7 @@ HWTEST_F(FingerprintAuthExecutorCallbackHdiUnitTest, FingerprintAuthExecutorCall
     callbackHdi.OnTip(testAcquire, testExtraInfo);
 }
 
-HWTEST_F(FingerprintAuthExecutorCallbackHdiUnitTest, FingerprintAuthExecutorCallback_OnResult_001, TestSize.Level0)
+HWTEST_F(FingerprintAuthExecutorCallbackHdiUnitTest, FingerprintAuthExecutorCallback_OnResult_001, TestSize.Level3)
 {
     static const std::map<ResultCode, IamResultCode> data = { { ResultCode::SUCCESS, IamResultCode::SUCCESS },
         { ResultCode::FAIL, IamResultCode::FAIL }, { ResultCode::GENERAL_ERROR, IamResultCode::GENERAL_ERROR },
