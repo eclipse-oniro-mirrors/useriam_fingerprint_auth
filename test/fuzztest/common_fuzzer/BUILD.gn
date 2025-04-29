@@ -38,6 +38,7 @@ ohos_source_set("fingerprintauthservice_source_set_fuzzer") {
     "safwk:system_ability_fwk",
     "samgr:samgr_proxy",
     "user_auth_framework:userauth_executors",
+    "hdf_core:libhdf_utils",
   ]
 
   if (use_musl) {
