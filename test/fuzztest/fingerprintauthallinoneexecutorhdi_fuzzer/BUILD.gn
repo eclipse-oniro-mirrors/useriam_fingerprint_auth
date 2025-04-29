@@ -39,6 +39,7 @@ ohos_fuzztest("FingerprintAuthAllInOneExecutorHdiFuzzTest") {
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "hilog:libhilog",
     "user_auth_framework:userauth_executors",
+    "hdf_core:libhdf_utils",
   ]
 
   remove_configs = [ "//build/config/compiler:no_exceptions" ]
