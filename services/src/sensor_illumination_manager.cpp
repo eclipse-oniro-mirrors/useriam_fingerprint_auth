@@ -180,7 +180,7 @@ UserAuth::ResultCode SensorIlluminationManager::TurnOnSensorIllumination(
 
     UserAuth::ResultCode turnOnResultCode = taskInProc_->TurnOnSensorIllumination();
     IF_FALSE_LOGE_AND_RETURN_VAL(turnOnResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
-
+    IAM_LOGI("success");
     return UserAuth::SUCCESS;
 }
 
@@ -199,7 +199,7 @@ UserAuth::ResultCode SensorIlluminationManager::TurnOffSensorIllumination(
 
     UserAuth::ResultCode turnOffResultCode = taskInProc_->TurnOffSensorIllumination();
     IF_FALSE_LOGE_AND_RETURN_VAL(turnOffResultCode == UserAuth::ResultCode::SUCCESS, UserAuth::GENERAL_ERROR);
-
+    IAM_LOGI("success");
     return UserAuth::SUCCESS;
 }
 } // namespace FingerprintAuth
