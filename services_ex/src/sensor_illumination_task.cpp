@@ -247,7 +247,7 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
     }
     brightness_ = brightness;
 
-    uint32_t alpha;
+    uint32_t alpha = 0;
     ResultCode result = GetBackgroundAlpha(brightness_, alpha);
     IF_FALSE_LOGE_AND_RETURN_VAL(result == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
     canvasParam_.alpha = alpha;
