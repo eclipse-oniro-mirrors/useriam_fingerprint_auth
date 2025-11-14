@@ -181,10 +181,10 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
     std::shared_ptr<RSSurface> rsSurface = RSSurfaceExtractor::ExtractRSSurface(rsSurfaceNode);
     IF_FALSE_LOGE_AND_RETURN_VAL(rsSurface != nullptr, ResultCode::GENERAL_ERROR);
 
-    auto renderContext = Common::MakeShared<RenderContext>();
+    auto renderContext = RenderContext::Create();
     IF_FALSE_LOGE_AND_RETURN_VAL(renderContext != nullptr, ResultCode::GENERAL_ERROR);
-    renderContext->InitializeEglContext();
-    rsSurface->SetRenderContext(renderContext.get());
+    renderContext->Init();
+    rsSurface->SetRenderContext(renderContext);
 
     uint32_t centerXInPx = 0;
     bool convertRetX = convertThousandthToPx(centerX, defaultDisplay->GetWidth(), centerXInPx);
