@@ -51,6 +51,7 @@ ohos_source_set("fingerprintauthservice_source_set") {
   public_configs = [ ":fingerprintauthservice_config" ]
 
   external_deps = [
+    "ability_base:configuration",
     "c_utils:utils",
     "drivers_interface_fingerprint_auth:libfingerprint_auth_proxy_2.0",
     "hdf_core:libhdf_utils",
