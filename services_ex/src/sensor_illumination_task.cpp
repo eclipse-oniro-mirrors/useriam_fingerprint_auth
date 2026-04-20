@@ -267,7 +267,7 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
     IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     rsSurface_->FlushFrame(surfaceFrame);
-    rsUIDirector_->SendMessages()
+    rsUIDirector_->SendMessages();
 
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
@@ -308,7 +308,7 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
     rsSurfaceNode_->SetPositionZ(MAX_ZORDER);
     rsSurfaceNode_->AttachToDisplay(defaultScreenId_);
-    rsUIDirector_->SendMessages()
+    rsUIDirector_->SendMessages();
 
     isIlluminationOn_ = true;
 
@@ -332,7 +332,7 @@ ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
 
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
     rsSurfaceNode_->DetachToDisplay(defaultScreenId_);
-    rsUIDirector_->SendMessages()
+    rsUIDirector_->SendMessages();
 
     isIlluminationOn_ = false;
 
