@@ -23,7 +23,7 @@
 #include "timer.h"
 #include "transaction/rs_interfaces.h"
 #include "ui/rs_surface_node.h"
-
+#include "ui/rs_ui_director.h"
 #include "iam_common_defines.h"
 
 #include "isensor_illumination_task.h"
@@ -63,6 +63,7 @@ private:
     static constexpr int32_t INVALID_DISPLAY_ID = -1;
 
     std::shared_ptr<Rosen::RSSurfaceNode> rsSurfaceNode_ = nullptr;
+    std::shared_ptr<Rosen::RSUIDirector> rsUIDirector_ = nullptr;
     std::shared_ptr<Rosen::RSSurface> rsSurface_ = nullptr;
     std::shared_ptr<Rosen::RenderContext> renderContext_ = nullptr;
     Rosen::DisplayId defaultDisplayId_ = INVALID_DISPLAY_ID;

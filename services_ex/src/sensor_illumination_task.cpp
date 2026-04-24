@@ -164,10 +164,15 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
 {
     std::lock_guard<std::recursive_mutex> lock(recursiveMutex_);
     IAM_LOGI("start");
+    defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
+    auto connectToRender = Rosen::RSInterfaces::GetInstance().GetConnectToRenderToken(defaultScreenId_);
+    rsUIDirector_ = Rosen::RSUIDirector::Create(connectToRender);
+    IF_FALSE_LOGE_AND_RETURN_VAL(rsUIDirector_ != nullptr, ResultCode::GENERAL_ERROR);
 
     RSSurfaceNodeConfig config = { .SurfaceNodeName = "FingerprintSenor" };
 
-    auto rsSurfaceNode = RSSurfaceNode::Create(config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE);
+    auto rsSurfaceNode = RSSurfaceNode::Create(
+        config, RSSurfaceNodeType::SELF_DRAWING_WINDOW_NODE, true, false, rsUIDirector_->GetRSUIContext());
     IF_FALSE_LOGE_AND_RETURN_VAL(rsSurfaceNode != nullptr, ResultCode::GENERAL_ERROR);
 
     auto defaultDisplay = DisplayManager::GetInstance().GetDefaultDisplay();
@@ -201,7 +206,6 @@ ResultCode SensorIlluminationTask::EnableSensorIllumination(uint32_t centerX, ui
         .frameWidth = width,
         .frameHeight = height };
 
-    defaultScreenId_ = Rosen::RSInterfaces::GetInstance().GetDefaultScreenId();
     defaultDisplayId_ = defaultDisplay->GetId();
     rsSurfaceNode_ = rsSurfaceNode;
     rsSurface_ = rsSurface;
@@ -263,8 +267,7 @@ ResultCode SensorIlluminationTask::DrawSurfaceNode()
     IF_FALSE_LOGE_AND_RETURN_VAL(drawCanvasResult == ResultCode::SUCCESS, ResultCode::GENERAL_ERROR);
 
     rsSurface_->FlushFrame(surfaceFrame);
-    auto transactionPolicy = RSTransactionProxy::GetInstance();
-    transactionPolicy->FlushImplicitTransaction();
+    rsUIDirector_->SendMessages();
 
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
@@ -305,7 +308,7 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
     rsSurfaceNode_->SetPositionZ(MAX_ZORDER);
     rsSurfaceNode_->AttachToDisplay(defaultScreenId_);
-    OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
+    rsUIDirector_->SendMessages();
 
     isIlluminationOn_ = true;
 
@@ -329,7 +332,7 @@ ResultCode SensorIlluminationTask::TurnOffSensorIllumination()
 
     IF_FALSE_LOGE_AND_RETURN_VAL(defaultScreenId_ != Rosen::INVALID_SCREEN_ID, ResultCode::GENERAL_ERROR);
     rsSurfaceNode_->DetachToDisplay(defaultScreenId_);
-    OHOS::Rosen::RSTransaction::FlushImplicitTransaction();
+    rsUIDirector_->SendMessages();
 
     isIlluminationOn_ = false;
 
