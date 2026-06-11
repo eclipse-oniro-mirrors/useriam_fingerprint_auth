@@ -370,6 +370,14 @@ void FuzzSetCachedTemplates(Parcel &parcel)
 void FuzzSendMessage(Parcel &parcel)
 {
     IAM_LOGI("begin");
+    if (g_hdi == nullptr) {
+        return;
+    }
+    uint64_t scheduleId = parcel.ReadUint64();
+    int32_t srcRole = parcel.ReadInt32();
+    std::vector<uint8_t> msg;
+    FillFuzzUint8Vector(parcel, msg);
+    g_hdi->SendMessage(scheduleId, srcRole, msg);
     IAM_LOGI("end");
 }
 
