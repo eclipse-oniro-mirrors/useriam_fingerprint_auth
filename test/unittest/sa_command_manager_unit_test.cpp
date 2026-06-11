@@ -146,6 +146,20 @@ HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_004, TestSize.Level4
     EXPECT_TRUE(ret == UserAuth::GENERAL_ERROR);
     SaCommandManager::GetInstance().UnregisterSaCommandProcessor(commandIds, saCommandProcessor);
 }
+
+HWTEST_F(SaCommandManagerUnitTest, SaCommandManagerUnitTest_005, TestSize.Level3)
+{
+    IAM_LOGI("begin SaCommandManagerUnitTest_005");
+    auto saCommandProcessor = Common::MakeShared<MockISaCommandProcessor>();
+    std::vector<SaCommandId> commandIds = { getSaCommandId() };
+    SaCommandManager::GetInstance().RegisterSaCommandProcessor(commandIds, saCommandProcessor);
+    std::vector<SaCommand> commands;
+    SaCommand saCommand = { .id = commandIds[0], .param = {} };
+    commands.push_back(saCommand);
+    SaCommandManager::GetInstance().ProcessSaCommands(nullptr, commands);
+    std::vector<SaCommandId> commandIds2 = { static_cast<SaCommandId>(100) };
+    EXPECT_NO_THROW(SaCommandManager::GetInstance().UnregisterSaCommandProcessor(commandIds2, saCommandProcessor));
+}
 } // namespace FingerprintAuth
 } // namespace UserIam
 } // namespace OHOS
