@@ -309,7 +309,6 @@ ResultCode SensorIlluminationTask::TurnOnSensorIllumination()
     rsSurfaceNode_->SetPositionZ(MAX_ZORDER);
     rsSurfaceNode_->AttachToDisplay(defaultScreenId_);
     rsUIDirector_->SendMessages();
-
     isIlluminationOn_ = true;
 
     IAM_LOGI("success");

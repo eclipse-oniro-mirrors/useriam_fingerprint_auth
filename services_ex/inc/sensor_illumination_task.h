@@ -24,6 +24,7 @@
 #include "transaction/rs_interfaces.h"
 #include "ui/rs_surface_node.h"
 #include "ui/rs_ui_director.h"
+
 #include "iam_common_defines.h"
 
 #include "isensor_illumination_task.h"
