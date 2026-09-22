@@ -226,6 +226,12 @@ ResultCode SensorIlluminationTask::DisableSensorIllumination()
     TurnOffSensorIllumination();
     rsSurfaceNode_ = nullptr;
 
+    if (rsUIDirector_ != nullptr) {
+        rsUIDirector_->SendMessages();
+    } else {
+        IAM_LOGE("DisableSensorIllumination rsUIDirector_ is nullptr");
+    }
+
     ScreenStateMonitor::GetInstance().Unsubscribe();
     IAM_LOGI("success");
     return ResultCode::SUCCESS;
